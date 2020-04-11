@@ -7,6 +7,7 @@ public class Test {
         String a = sc.nextLine();
         String b = sc.nextLine();
         System.out.println(SigFig.add(a,b));
+        System.out.println("Yeah");
         sc.close();
     }
 }

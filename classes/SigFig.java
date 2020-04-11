@@ -16,7 +16,6 @@ public class SigFig {
 //	 Next Steps:
 //	 - Implement support for sci not'n input
 //	 - Implement sig fig when sum/difference/product/quotient returned in sci not'n
-//	 - Use rng to test methods once done (for extreme edge cases)
 //	 - Support case when difference is zero?
 //	 - subtract("0.05", "0.03") returns "0.020"
 	

@@ -1,13 +1,11 @@
 import java.util.Scanner;
-import classes.SigFig;
+// import classes.SigFig;
+import java.text.DecimalFormat;
 
 public class Test {
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        String a = sc.nextLine();
-        String b = sc.nextLine();
-        System.out.println(SigFig.add(a,b));
-        System.out.println("Yeah");
-        sc.close();
+        double val = 12345;
+        DecimalFormat format = new DecimalFormat("0.###E0");
+        System.out.println(format.format(val));
     }
 }

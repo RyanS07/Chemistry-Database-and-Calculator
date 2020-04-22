@@ -6,7 +6,6 @@ public class Test {
     public static void main(String[] args) {
         // System.out.println(SigFig.subtract("37.21", "30.64"));
         test(5);
-        System.out.println("Hello");
     }
     public static void test(int n) {
         for(int i = 0; i < n; i++) {

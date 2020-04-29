@@ -22,17 +22,23 @@ public class SigFig {
 //   - Check if value passed into constructor is valid 
 //   - Change setSigFig to use DecimalFormat
 	
-	private int sf;
-	private int sfLoc;
-	private String val;
-	private double doubleVal;
+	private int sf = 0;
+	private int sfLoc = -1;
+	private String val = "";
+	private double doubleVal = 0;
 
 	public SigFig(String value) {
 		if(value.indexOf('E') > -1) { 
 			int exp = Integer.parseInt(value.substring(value.indexOf('E') + 1));
 			value = value.substring(0, value.indexOf('E'));
+			char lastDigit = value.charAt(value.length()-1);
 			this.val = shift(value, exp);
-			this.sfLoc = value.indexOf('E') - 1;
+			for(int i = this.val.length()-1; i > 0; i--) {
+				if(this.val.charAt(i) == lastDigit) {
+					this.sfLoc = i;
+					break;
+				}
+			}
 		} else {
 			this.val = value;
 			this.sfLoc = value.length()-1;
@@ -327,6 +333,7 @@ public class SigFig {
 		return String.format("%." + sf + "g", x);
 	}
 
+	// Remove when constructor works
 	public static String parse(String x) {
 		if(x.indexOf('E') > -1) {
 			String val = x.substring(0, x.indexOf('E'));

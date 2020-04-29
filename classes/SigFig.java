@@ -1,7 +1,7 @@
 package classes;
 
 import java.util.Arrays;
-
+import java.text.DecimalFormat;
 
 public class SigFig {
 	/*
@@ -19,7 +19,29 @@ public class SigFig {
 //	 - Implement support for sci not'n input
 //	 - Implement sig fig when sum/difference/product/quotient returned in sci not'n
 //	 - Use rng to test methods once done (for extreme edge cases)
+//   - Check if value passed into constructor is valid 
+//   - Change setSigFig to use DecimalFormat
 	
+	private int sf;
+	private int sfLoc;
+	private String val;
+	private double doubleVal;
+
+	public SigFig(String value) {
+		if(value.indexOf('E') > -1) { 
+			int exp = Integer.parseInt(value.substring(value.indexOf('E') + 1));
+			value = value.substring(0, value.indexOf('E'));
+			this.val = shift(value, exp);
+			this.sfLoc = value.indexOf('E') - 1;
+		} else {
+			this.val = value;
+			this.sfLoc = value.length()-1;
+		}
+		this.sf = determineSigFig(value);
+		this.doubleVal = Double.parseDouble(this.val);
+	}
+
+
 	/*
 	 * Description:
 	 * - a{n} hereby denotes the numerical value of a
@@ -113,8 +135,7 @@ public class SigFig {
 		return 0;
 	}
 
-	private static int[] align(String x, int intLength, int decLength, int totalLength, int offset) {
-		// Gets the starting index of 
+	private static int[] align(String x, int intLength, int decLength, int totalLength, int offset) { 
 		int start = intLength - getIntLength(x);
 		int end = decLength - getDecLength(x);
 		int decPoint = -1;
@@ -224,7 +245,7 @@ public class SigFig {
 	
 	private static int getLeadingZeros(String x) {
 		// Removes the '.' from the string
-		if(x.indexOf('.') != -1) {
+		if(x.indexOf('.') > -1) {
 			x = x.substring(0, x.indexOf('.')) + x.substring(x.indexOf('.') + 1);
 		}
 		
@@ -244,16 +265,16 @@ public class SigFig {
 	 * - a{n}, b{n} > 0
 	 */
 	public static String multiply(String a, String b) {
-		// See determineSigFig() below
-		int sf1 = determineSigFig(a);
-		int sf2 = determineSigFig(b);
-		
-		if(sf1 == -1 || sf2 == -1) {
+		SigFig firstOperand = new SigFig(a);
+		SigFig secondOperand = new SigFig(b);
+
+		if(firstOperand.sf == -1 || secondOperand.sf == -1) {
 			return "Invalid entry.";
 		} else {
 			// Returns the product, set to the lower of the sig figs of the two operands
 			// See setSigFig() at the end of the class
-			return setSigFig(Double.parseDouble(a) * Double.parseDouble(b), sf1<sf2?sf1:sf2);
+			int productSF = firstOperand.sf < secondOperand.sf ? firstOperand.sf : secondOperand.sf;
+			return setSigFig(firstOperand.doubleVal * secondOperand.doubleVal, productSF);
 		}
 	}
 	
@@ -265,15 +286,15 @@ public class SigFig {
 	 * - a{n}, b{n} > 0
 	 */
 	public static String divide(String a, String b) {
-		// See determineSigFig() below
-		int sf1 = determineSigFig(a);
-		int sf2 = determineSigFig(b);
-		if(sf1 == -1 || sf2 == -1) {
+		SigFig firstOperand = new SigFig(a);
+		SigFig secondOperand = new SigFig(b);
+		if(firstOperand.sf == -1 || secondOperand.sf == -1) {
 			return "Invalid entry.";
 		} else {
 			// Returns the quotient, set to the lower of the sig figs of the two operands
 			// See setSigFig() at the end of the class
-			return setSigFig(Double.parseDouble(a) / Double.parseDouble(b), sf1<sf2?sf1:sf2);
+			int quotientSF = firstOperand.sf < secondOperand.sf ? firstOperand.sf : secondOperand.sf;
+			return setSigFig(firstOperand.doubleVal / secondOperand.doubleVal, quotientSF);
 		}
 	}
 	
@@ -304,5 +325,40 @@ public class SigFig {
 	 */
 	private static String setSigFig(double x, int sf) {
 		return String.format("%." + sf + "g", x);
+	}
+
+	public static String parse(String x) {
+		if(x.indexOf('E') > -1) {
+			String val = x.substring(0, x.indexOf('E'));
+			int exp = Integer.parseInt(x.substring(x.indexOf('E') + 1));
+			return shift(val, exp);
+		} else {
+			return x;
+		}
+	}
+
+	private static String shift(String x, int exp) {
+		if(exp < 0) {
+			exp *= -1;
+			exp--;
+			int dotIndex = x.indexOf('.');
+			x = x.substring(0, dotIndex) + x.substring(dotIndex + 1);
+			for(int i = 0; i < exp; i++) {
+				x = "0" + x;
+			}
+			x = "0." + x;
+			return x;
+		} else {
+			int dotIndex = x.indexOf('.');
+			if(dotIndex > -1) {
+				int decLength = x.substring(dotIndex + 1).length();
+				System.out.println("EXP:" + exp + ", DecLength: " + decLength);
+				exp -= decLength;
+			}
+			for(int i = 0; i < exp; i++) {
+				x += "0";
+			}
+			return x;
+		}
 	}
 }

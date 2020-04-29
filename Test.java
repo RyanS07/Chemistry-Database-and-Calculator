@@ -9,7 +9,7 @@ public class Test {
         String a = sc.nextLine();
         String b = sc.nextLine();
         System.out.println(SigFig.divide(a, b));
-        System.out.println("Hello");
+
 
         // for(int i = 0; i < 5; i++) {
         //     String val = sc.nextLine();

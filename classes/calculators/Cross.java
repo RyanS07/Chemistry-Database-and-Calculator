@@ -16,8 +16,8 @@ import classes.calculators.SigFig;
  *   - Avogadro's Hypothesis (V1/n1 = V2/n2)
  * 
  * Calculators below use Cross Division:
- *   - Concentration           (C1*V1 = C2*V2) 
- *   - Boyle's Law         (P1*V1 = P2*V2)
+ *   - Concentration         (C1*V1 = C2*V2) 
+ *   - Boyle's Law           (P1*V1 = P2*V2)
  */
 public class Cross {
     /* Description:

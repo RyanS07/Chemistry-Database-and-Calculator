@@ -83,19 +83,22 @@ public class SigFig {
 		 * 
 		 * The block below converts from String.format()'s formating to the ideal
 		 * scientific notation 
-		 *  - Ex: "1.2e+02" --> "1.2E02"
-		 *  - Ex: "1.2e-02" --> "1.2E-02"
+		 *  - Ex: "1.2e+02" --> "1.2E2"
+		 *  - Ex: "1.2e-02" --> "1.2E-2"
 		 */ 
 		String firstStep = String.format("%." + sf + "g", val);
-		System.out.println(firstStep);
 		String secondStep = firstStep;
 		for(int i = 0; i < firstStep.length(); i++) {
 			if(firstStep.charAt(i) == 'e') {
 				secondStep = firstStep.substring(0, i);
 				secondStep += "E";
-				System.out.println(secondStep);
-				/* Double.parseDouble("+02") returns 2
-				 * Double.parseDouble("-02") returns -2
+				/* Integer.parseInt("+02") returns 2
+				 * Integer.parseInt("-02") returns -2
+				 * 
+				 * So this method can be used to convert the remainder
+				 * of the String.format() to the correct exponent
+				 *  - Correct exponent has the correct sign and no 
+				 *    leading zeros
 				 */
 				secondStep += Integer.parseInt(firstStep.substring(i+1));
 				break;

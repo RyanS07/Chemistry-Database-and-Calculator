@@ -49,7 +49,7 @@ public class ElementsHashMap {
     public static void initializeElements() {
         try {
             // uses readFile method from specific file location
-            String periodicTable = readFile("C:\\Users\\Timothy Wang\\IdeaProjects\\Calculator\\src\\PeriodTableData.csv");
+            String periodicTable = readFile("/Users/MattonXia/Desktop/contacts/src/Balkulator/src/src/classes/PeriodTableData.csv");
             String[] elems = periodicTable.split("\n");
             for(int i = 1; i < elems.length; i++) {
                 String[] details = elems[i].split(","); // splits each row into their individual elements

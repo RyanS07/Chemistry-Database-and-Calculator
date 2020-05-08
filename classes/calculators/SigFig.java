@@ -2,7 +2,6 @@ package classes.calculators;
 
 /* TODO:
  *  - Write comment to explain determine() return 0
- *  - Rewrite set() to use NumberFormat or return in proper sci not'n
  */
 
 /* The SigFig class is a collection of static methods used to perform arithmatic with

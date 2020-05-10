@@ -1,7 +1,8 @@
+// Made by Ryan Seto
+
 package classes.calculators;
 
 import classes.calculators.SigFig;
-
 
 // Instances of the Data class represent a value with a unit, in accordance with significant figure rules (sig fig)
 public class Data {

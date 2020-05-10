@@ -1,3 +1,5 @@
+// Made by Ryan Seto
+
 package classes.calculators;
 
 import classes.calculators.SigFig;

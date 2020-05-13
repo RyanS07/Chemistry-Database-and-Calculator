@@ -44,44 +44,102 @@ public class ElementsHashMap {
         else return 0;
     }
 
-    public static Map<String, Element> elements = new HashMap<>();
+    public static Map<Integer, Metalloid> metalloids = new HashMap<>();
+    public static Map<Integer, Nonmetal> nonmetals = new HashMap<>();
+    public static Map<Integer, Metal> metals = new HashMap<>();
 
     public static void initializeElements() {
         try {
             // uses readFile method from specific file location
-            String periodicTable = readFile("/Users/MattonXia/Desktop/contacts/src/Balkulator/src/src/classes/PeriodTableData.csv");
+            String periodicTable = readFile("C:\\Users\\Timothy Wang\\IdeaProjects\\Calculator\\src\\PeriodTableData.csv");
             String[] elems = periodicTable.split("\n");
             for(int i = 1; i < elems.length; i++) {
                 String[] details = elems[i].split(","); // splits each row into their individual elements
-                elements.put(details[2], new Element(
-                        ParseInt(details[0]), // atomic number
-                        details[1], // element
-                        details[2], // symbol
-                        ParseDouble(details[3]), // atomic mass
-                        ParseInt(details[4]), // number of neutrons
-                        ParseInt(details[5]), // number of protons
-                        ParseInt(details[6]), // number of electrons
-                        ParseInt(details[7]), // period
-                        ParseInt(details[8]), // group
-                        details[9], // phase
-                        details[10], // isradioactive
-                        details[11], // isnatural
-                        details[12], // ismetal
-                        details[13], // isnonmetal
-                        details[14], // ismetalloid
-                        details[15], // type
-                        ParseDouble(details[16]), // atomic radius
-                        ParseDouble(details[17]), // electronegativity
-                        ParseDouble(details[18]), // first ionization
-                        ParseDouble(details[19]), // density
-                        ParseDouble(details[20]), // melting point
-                        ParseDouble(details[21]), // boiling point
-                        ParseInt(details[22]), // discoverer
-                        details[23], // year
-                        ParseInt(details[24]), // year
-                        ParseDouble(details[25]), // specific heat
-                        ParseInt(details[26]), // number of shells
-                        ParseInt(details[27]))); // number of valence
+                if(details[12].equals("yes")) {
+                    metals.put(i, new Metal(
+                            ParseInt(details[0]), // atomic number
+                            details[1], // element
+                            details[2], // symbol
+                            ParseDouble(details[3]), // atomic mass
+                            ParseInt(details[4]), // number of neutrons
+                            ParseInt(details[5]), // number of protons
+                            ParseInt(details[6]), // number of electrons
+                            ParseInt(details[7]), // period
+                            ParseInt(details[8]), // group
+                            details[9], // phase
+                            details[10], // isradioactive
+                            details[11], // isnatural
+                            details[15], // type
+                            ParseDouble(details[16]), // atomic radius
+                            ParseDouble(details[17]), // electronegativity
+                            ParseDouble(details[18]), // first ionization
+                            ParseDouble(details[19]), // density
+                            ParseDouble(details[20]), // melting point
+                            ParseDouble(details[21]), // boiling point
+                            ParseInt(details[22]), // discoverer
+                            details[23], // year
+                            ParseInt(details[24]), // year
+                            ParseDouble(details[25]), // specific heat
+                            ParseInt(details[26]), // number of shells
+                            ParseInt(details[27])
+                    ));
+                } else if(details[13].equals("yes")) {
+                    nonmetals.put(i, new Nonmetal(
+                            ParseInt(details[0]), // atomic number
+                            details[1], // element
+                            details[2], // symbol
+                            ParseDouble(details[3]), // atomic mass
+                            ParseInt(details[4]), // number of neutrons
+                            ParseInt(details[5]), // number of protons
+                            ParseInt(details[6]), // number of electrons
+                            ParseInt(details[7]), // period
+                            ParseInt(details[8]), // group
+                            details[9], // phase
+                            details[10], // isradioactive
+                            details[11], // isnatural
+                            details[15], // type
+                            ParseDouble(details[16]), // atomic radius
+                            ParseDouble(details[17]), // electronegativity
+                            ParseDouble(details[18]), // first ionization
+                            ParseDouble(details[19]), // density
+                            ParseDouble(details[20]), // melting point
+                            ParseDouble(details[21]), // boiling point
+                            ParseInt(details[22]), // discoverer
+                            details[23], // year
+                            ParseInt(details[24]), // year
+                            ParseDouble(details[25]), // specific heat
+                            ParseInt(details[26]), // number of shells
+                            ParseInt(details[27])
+                    ));
+                } else if(details[14].equals("yes")) {
+                    metalloids.put(i, new Metalloid(
+                            ParseInt(details[0]), // atomic number
+                            details[1], // element
+                            details[2], // symbol
+                            ParseDouble(details[3]), // atomic mass
+                            ParseInt(details[4]), // number of neutrons
+                            ParseInt(details[5]), // number of protons
+                            ParseInt(details[6]), // number of electrons
+                            ParseInt(details[7]), // period
+                            ParseInt(details[8]), // group
+                            details[9], // phase
+                            details[10], // isradioactive
+                            details[11], // isnatural
+                            details[15], // type
+                            ParseDouble(details[16]), // atomic radius
+                            ParseDouble(details[17]), // electronegativity
+                            ParseDouble(details[18]), // first ionization
+                            ParseDouble(details[19]), // density
+                            ParseDouble(details[20]), // melting point
+                            ParseDouble(details[21]), // boiling point
+                            ParseInt(details[22]), // discoverer
+                            details[23], // year
+                            ParseInt(details[24]), // year
+                            ParseDouble(details[25]), // specific heat
+                            ParseInt(details[26]), // number of shells
+                            ParseInt(details[27])
+                    ));
+                }
             }
         } catch(IOException e) { // catches any input/output exception
             e.printStackTrace();
@@ -91,12 +149,6 @@ public class ElementsHashMap {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         initializeElements();
-        while(true) {
-            String str = sc.next();
-            if(str.equals("stop")) {
-                return;
-            }
-            System.out.println(elements.get(str));
-        }
+
     }
 }

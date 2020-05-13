@@ -1,4 +1,4 @@
-public class Element {
+public abstract class Element {
 
     // instance variables made private to not be easily accessible and changeable
     private int atomicNumber;
@@ -13,9 +13,6 @@ public class Element {
     private String phase;
     private boolean isRadioactive;
     private boolean isNatural;
-    private boolean isMetal;
-    private boolean isNonmetal;
-    private boolean isMetalloid;
     private String type;
     private double atomicRadius;
     private double electronegativity;
@@ -80,18 +77,6 @@ public class Element {
         return this.isNatural;
     }
 
-    public boolean getIsMetal() {
-        return this.isMetal;
-    }
-
-    public boolean getIsNonmetal() {
-        return this.isNonmetal;
-    }
-
-    public boolean getIsMetalloid() {
-        return this.isMetalloid;
-    }
-
     public String getType() {
         return this.type;
     }
@@ -145,7 +130,6 @@ public class Element {
     }
 
     // setters for all instance variables accessible by other classes
-
     public void setAtomicNumber(int atomicNumber) {
         this.atomicNumber = atomicNumber;
     }
@@ -192,18 +176,6 @@ public class Element {
 
     public void setIsNatural(String bool) {
         this.isNatural = bool.equals("yes");
-    }
-
-    public void setIsMetal(String bool) {
-        this.isMetal = bool.equals("yes");
-    }
-
-    public void setIsNonmetal(String bool) {
-        this.isNonmetal = bool.equals("yes");
-    }
-
-    public void setIsMetalloid(String bool) {
-        this.isMetalloid = bool.equals("yes");
     }
 
     public void setType(String type) {
@@ -259,9 +231,7 @@ public class Element {
     }
 
     // default constructor for Element class
-
     public Element() {
-
         this.atomicNumber = 0;
         this.element = "";
         this.symbol = "";
@@ -274,9 +244,6 @@ public class Element {
         this.phase = "";
         this.isRadioactive = false;
         this.isNatural = false;
-        this.isMetal = false;
-        this.isNonmetal = false;
-        this.isMetalloid = false;
         this.type = "";
         this.atomicRadius = 0;
         this.electronegativity = 0;
@@ -293,7 +260,7 @@ public class Element {
     }
 
     // non-empty constructor for Element class
-    public Element(int atomicNumber, String element, String symbol, double atomicMass, int numberOfNeutrons, int numberOfProtons, int numberOfElectrons, int period, int group, String phase, String isRadioactive, String isNatural, String isMetal, String isNonmetal, String isMetalloid, String type, double atomicRadius, double electronegativity, double firstIonization, double density, double meltingPoint, double boilingPoint, int numberOfIsotopes, String discoverer, int year, double specificHeat, int numberOfShells, int numberOfValence) {
+    public Element(int atomicNumber, String element, String symbol, double atomicMass, int numberOfNeutrons, int numberOfProtons, int numberOfElectrons, int period, int group, String phase, String isRadioactive, String isNatural, String type, double atomicRadius, double electronegativity, double firstIonization, double density, double meltingPoint, double boilingPoint, int numberOfIsotopes, String discoverer, int year, double specificHeat, int numberOfShells, int numberOfValence) {
         this.atomicNumber = atomicNumber;
         this.element = element;
         this.symbol = symbol;
@@ -306,9 +273,6 @@ public class Element {
         this.phase = phase;
         this.isRadioactive = isRadioactive.equals("yes");
         this.isNatural = isNatural.equals("yes");
-        this.isMetal = isMetal.equals("yes");
-        this.isNonmetal = isNonmetal.equals("yes");
-        this.isMetalloid = isMetalloid.equals("yes");
         this.type = type;
         this.atomicRadius = atomicRadius;
         this.electronegativity = electronegativity;
@@ -327,6 +291,9 @@ public class Element {
     // override toString method to allow printing
     @Override
     public String toString() {
-        return atomicNumber + " " + element + " " + symbol + " " + atomicMass + " " + numberOfNeutrons + " " + numberOfProtons + " " + numberOfElectrons + " " + period + " " + group + " " + phase + " " + isRadioactive + " " + isNatural + " " + isMetal + " " + isNonmetal + " " + isMetalloid + " " + type + " " + atomicRadius + " " + electronegativity + " " + firstIonization + " " + density + " " + meltingPoint + " " + numberOfIsotopes + " " + discoverer + " " + year + " " + specificHeat + " " + numberOfShells + " " + numberOfValence + "\n";
+        return atomicNumber + " " + element + " " + symbol + " " + atomicMass + " " + numberOfNeutrons + " " + numberOfProtons + " " + numberOfElectrons + " " + period + " " + group + " " + phase + " " + isRadioactive + " " + isNatural + " " + type + " " + atomicRadius + " " + electronegativity + " " + firstIonization + " " + density + " " + meltingPoint + " " + numberOfIsotopes + " " + discoverer + " " + year + " " + specificHeat + " " + numberOfShells + " " + numberOfValence + "\n";
     }
+
+    // Abstract methods
+
 }

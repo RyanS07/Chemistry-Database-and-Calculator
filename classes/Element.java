@@ -1,3 +1,4 @@
+// TODO: Abstract methods
 public abstract class Element {
 
     // instance variables made private to not be easily accessible and changeable
@@ -295,5 +296,4 @@ public abstract class Element {
     }
 
     // Abstract methods
-
 }

@@ -27,7 +27,7 @@ public class SigFig {
 	 * Postcondition:
 	 *  - N/A
 	 */
-	public static int determine(String val) {
+	protected static int determine(String val) {
 		/* Checks if val is a valid number (Ex: 1.234, 1.23E4, 0.01, etc.) 
 		 * If x contains any non-number values besides '.' and 'E', the algorithm does not run properly
 		 */
@@ -72,7 +72,7 @@ public class SigFig {
 	 * Precondition:
 	 * - sf > 0
 	 */
-	public static String set(double val, int sf) {
+	protected static String set(double val, int sf) {
 		/* If sf == 0, then determine() was given an invalid value
 		 * If determine() was given an invalid value, then the sig figs are wrong
 		 */
@@ -114,7 +114,7 @@ public class SigFig {
 	 * - All calculators then need to find the lowest sig fig of all 3 input values to determine 
 	 *   the answer's sig fig
 	 */ 
-	public static int min(Data a, Data b, Data c) {
+	protected static int min(Data a, Data b, Data c) {
         int sf = Math.min(a.getSF(), b.getSF());
         sf = Math.min(sf, c.getSF());
         return sf;

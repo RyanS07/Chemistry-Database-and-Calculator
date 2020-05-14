@@ -8,19 +8,36 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 public abstract class Page {
+    // Instance variabls of each Page
+    // Variables are protected so subclasses have access but files outside the pages package do not
     protected Pane pane;
     protected Scene scene;
-    protected String appTitle = "Balkulator";
 
+    // Static variables all pages use
+    // setStage() and setPageMap() must be called before any subclass method
     protected static Stage stage;
     protected static HashMap<String, Page> pageMap;
-    protected final static double pageWidth = 1250;
-    protected final static double pageHeight = 900;
+
+    // Final variables for the corresponding component
+    protected final static double width = 1250;
+    protected final static double height = 900;
     protected final static double buttonWidth = 100;
     protected final static double buttonHeight = 50;
         
+    /* Every subclass of the Page class has to redirect to another page.
+     * The methodology the Page class is based on HTML, where each new
+     * page has its own file (in this case its own class). 
+     */
     public abstract void setRedirects();
 
+    /* Description:
+     *  - See each Page subclass's setRedirects() for example
+     *  - Method created to aid code readability and reuse
+     *  - Redirects to the page with the pageMap key name
+     * 
+     * Precondition:
+     *  - name must be one of the pageMap keys
+     */
     public void goTo(String name) {
         Page.stage.setScene(pageMap.get(name).getScene());
     }
@@ -32,6 +49,11 @@ public abstract class Page {
         return this.pane;
     }
 
+    /* Description:
+     *  - All buttons have the same dimensions
+     *  - Method is used to aid code readibility and reuse
+     *  - Returns a Button instance with the coresponding name text
+     */
     public Button setButton(String text) {
         Button button = new Button(text);
         button.setPrefWidth(buttonWidth);
@@ -39,6 +61,12 @@ public abstract class Page {
         return button;
     }
     
+    /* Description:
+     *  - Similar purpose to setButton()
+     *  - Pages have back/return buttons to return to the previous page
+     *  - All back buttons have the same properties, so a method is used
+     *    to aid code readability and reuse
+     */
     public Button setBackButton() {
         Button back = new Button("<-");
         back.setPrefWidth(buttonWidth);
@@ -48,10 +76,11 @@ public abstract class Page {
         return back;
     }
     
-
+    // Sets static variable Page.stage to stage
     public static void setStage(Stage stage) {
         Page.stage = stage;
     }
+    // Sets static variable Page.pageMap to pageMap
     public static void setPageMap(HashMap<String, Page> pageMap) {
         Page.pageMap = pageMap;
     }

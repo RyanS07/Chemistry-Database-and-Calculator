@@ -2,15 +2,12 @@
 
 package classes.calculators;
 
-import classes.calculators.SigFig;
-import classes.calculators.Data;
-
 /* IdealGasLaw is a collection of static methods used to perform calculations using the 
  * ideal gas law (PV = nRT).
  */
 public class IdealGasLaw {
     // Note: all pressure values must be in kPa
-    public static final double R = 8.314;
+    private static final double R = 8.314;
 
     /* 
      * Description:
@@ -22,7 +19,7 @@ public class IdealGasLaw {
      *  - temp must be in (K) unit 
      *  - All parameters must satisfy the Data constructor preconditions
      */
-    public static String solveForPressure(String vol, String mol, String temp) {
+    private static String solveForPressure(String vol, String mol, String temp) {
         Data V = new Data(vol);
         Data n = new Data(mol);
         Data T = new Data(temp);
@@ -41,7 +38,7 @@ public class IdealGasLaw {
      *  - mol must be in (mol) unit
      *  - temp must be in (K) unit 
      */
-    public static String solveForVolume(String pressure, String mol, String temp) {
+    private static String solveForVolume(String pressure, String mol, String temp) {
         Data P = new Data(pressure);
         Data n = new Data(mol);
         Data T = new Data(temp);
@@ -60,7 +57,7 @@ public class IdealGasLaw {
      *  - vol must be in (L) unit
      *  - temp must be in (K) unit 
      */
-    public static String solveForMoles(String pressure, String vol, String temp) {
+    private static String solveForMoles(String pressure, String vol, String temp) {
         Data P = new Data(pressure);
         Data V = new Data(vol);
         Data T = new Data(temp);
@@ -79,7 +76,7 @@ public class IdealGasLaw {
      *  - vol must be in (L) unit
      *  - mol must be in (mol) unit 
      */
-    public static String solveForTemp(String pressure, String vol, String mol) {
+    private static String solveForTemp(String pressure, String vol, String mol) {
         Data P = new Data(pressure);
         Data V = new Data(vol);
         Data n = new Data(mol);
@@ -87,5 +84,28 @@ public class IdealGasLaw {
         int sf = SigFig.min(P, V, n);
         
         return SigFig.set((P.getVal() * V.getVal()) / (n.getVal() * R), sf) + "K";
+    }
+
+    /* Description:
+     *  - Determines which of the above methods to call
+     *  - Method is designed with the UI Textfields in mind
+     *    - The UI will have 4 textfields where users input their 3/4 values
+     *    - Instead of handling which method to call to solve the equation in 
+     *      the Main.java, the handling is done here
+     * 
+     * Precondition:
+     *  - Textfields must call the trim() method on all their String values
+     *  - Onnly 1/4 String can be an empty String ("")
+     */
+    public static String solve(String pressure, String vol, String mol, String temp) {
+        if(pressure.equals("")) {
+            return solveForPressure(vol, mol, temp);
+        } else if(vol.equals("")) {
+            return solveForVolume(pressure, mol, temp);
+        } else if(mol.equals("")) {
+            return solveForMoles(pressure, vol, temp);
+        } else {
+            return solveForTemp(pressure, vol, mol);
+        }
     }
 }

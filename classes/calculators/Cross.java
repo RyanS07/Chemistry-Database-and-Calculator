@@ -2,9 +2,6 @@
 
 package classes.calculators;
 
-import classes.calculators.Data;
-import classes.calculators.SigFig;
-
 /* Cross is a collection of static methods use to solve calcluations that either cross 
  * multiply or "cross divide"
  *  - Example of Cross Multiply

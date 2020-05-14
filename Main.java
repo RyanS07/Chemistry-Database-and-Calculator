@@ -1,11 +1,5 @@
 import javafx.application.Application;
-import javafx.geometry.Bounds;
 import javafx.stage.Stage;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.Pane;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 
 import classes.pages.Page;
 import classes.pages.HomePage;
@@ -17,33 +11,36 @@ import classes.pages.CalculatorPage;
 import java.util.HashMap;
 
 public class Main extends Application{
-    public String pageList[] = {"Home", "Instructions", "Tables", "ElementPage", "Calculators"};
+    // HashMap containing all pages of the app and how to get to them
     public HashMap<String, Page> pageMap = new HashMap<String, Page>();
+    // Array containing each page key for pageMap
+    public String pageList[] = {"Home", "Instructions", "Tables", "ElementPage", "Calculators"};
     public String appTitle = "Balkulator";
 
     @Override
     public void start(Stage stage) {
         stage.setTitle(appTitle);
-        setPages(stage);
-        setPagePaths();
+        initializePages(stage);
         stage.setScene(pageMap.get("Home").getScene());
         stage.show();
     }
 
-    public void setPages(Stage stage) {
+    /* Description:
+     *  - Initializes all page instances and puts them in pageMap
+     *  
+     * Precondition:
+     *  - Page.setStage() and Page.setPageMap() must be called before any methods of each Page
+     *    subclass is used
+     *  - All methods rely on having static variables Page.stage and Page.pageMap
+     */
+    public void initializePages(Stage stage) {
         Page.setStage(stage);
         Page.setPageMap(pageMap);
-        pageMap.put("Home", new HomePage());
-        pageMap.put("Instructions", new InstructionsPage());
-        pageMap.put("Tables", new TablePage());
-        pageMap.put("ElementPage", new ElementPage());
-        pageMap.put("Calculators", new CalculatorPage());
-    }
-
-    public void setPagePaths() {
-        for(int i = 0; i < pageList.length; i++) {
-            pageMap.get(pageList[i]).setRedirects();
-        }
+        pageMap.put(pageList[0], new HomePage());
+        pageMap.put(pageList[1], new InstructionsPage());
+        pageMap.put(pageList[2], new TablePage());
+        pageMap.put(pageList[3], new ElementPage());
+        pageMap.put(pageList[4], new CalculatorPage());
     }
 
     public static void main(String[] args) {

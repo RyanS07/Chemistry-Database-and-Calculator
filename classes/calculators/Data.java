@@ -2,8 +2,6 @@
 
 package classes.calculators;
 
-import classes.calculators.SigFig;
-
 // Instances of the Data class represent a value with a unit, in accordance with significant figure rules (sig fig)
 public class Data {
     // Below are the conversion constants from each corresponding unit
@@ -29,7 +27,7 @@ public class Data {
      * Postcondition:
      *  - N/A
      */
-    public Data(String input) {
+    protected Data(String input) {
         for(int i = 0; i < input.length(); i++) {
             // Loop iterates until it has found the first char of the units
             if(isUnitChar(input.charAt(i))) {
@@ -63,7 +61,7 @@ public class Data {
      * Postcondition:
      *  - N/A
      */
-    private boolean isUnitChar(char input) {
+    protected boolean isUnitChar(char input) {
         // returns true if the character is outside the 10 digits, and is not '.' or 'E'
         return !(input >= '0' && input <= '9' || input == '.' || input == 'E');
     }
@@ -77,7 +75,7 @@ public class Data {
      * Postcondition:
      *  - N/A
      */
-    private void convertToL() {
+    protected void convertToL() {
         if(this.unit.equals("ml")) {
             this.val *= mlToL;
             this.unit = "L";
@@ -113,21 +111,21 @@ public class Data {
     /* Descrption:
      *  - this.sf accessor
      */
-    public int getSF() {
+    protected int getSF() {
         return this.sf;
     }
 
     /* Descrption:
      *  - this.val accessor
      */
-    public double getVal() {
+    protected double getVal() {
         return this.val;
     }
 
     /* Descrption:
      *  - this.unit accessor
      */
-    public String getUnit() {
+    protected String getUnit() {
         return this.unit;
     }
 

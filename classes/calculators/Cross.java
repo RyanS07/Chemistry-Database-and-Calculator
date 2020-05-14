@@ -33,7 +33,12 @@ public class Cross {
      *  - Textfields must call the trim() method on all their String values
      *  - Onnly 1/4 String can be an empty String ("")
      */
-    public static String multiply(String a1, String b1, String a2, String b2) {
+    public static String multiply(String[] inputs) {
+        // Reassigned for readability
+        String a1 = inputs[0];
+        String b1 = inputs[1];
+        String a2 = inputs[2];
+        String b2 = inputs[3];
         // Determines which String is empty, so the correct method is called
         if(a1.equals("")) {
             return multiplyForA(a2, b2, b1);
@@ -91,7 +96,12 @@ public class Cross {
      *  - Textfields must call the trim() method on all their String values
      *  - Onnly 1/4 String can be an empty String ("")
      */
-    public static String divide(String a1, String b1, String a2, String b2) {
+    public static String divide(String[] inputs) {
+        // Reassigned for readability
+        String a1 = inputs[0];
+        String b1 = inputs[1];
+        String a2 = inputs[2];
+        String b2 = inputs[3];
         // Determines which String is empty, so the correct method is called
         if(a1.equals("")) {
             return divideForA(a2, b2, b1);

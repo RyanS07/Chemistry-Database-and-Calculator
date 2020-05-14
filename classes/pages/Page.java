@@ -28,7 +28,7 @@ public abstract class Page {
      * The methodology the Page class is based on HTML, where each new
      * page has its own file (in this case its own class). 
      */
-    public abstract void setRedirects();
+    protected abstract void setRedirects();
 
     /* Description:
      *  - See each Page subclass's setRedirects() for example

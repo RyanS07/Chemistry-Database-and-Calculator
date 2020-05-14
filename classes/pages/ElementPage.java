@@ -17,7 +17,7 @@ public class ElementPage extends Page {
         setRedirects();
     }
 
-    public void setRedirects() {
+    protected void setRedirects() {
         this.back.setOnAction(event -> {
             goTo("Tables");
         });

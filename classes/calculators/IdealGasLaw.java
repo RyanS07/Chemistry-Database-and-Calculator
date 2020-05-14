@@ -97,7 +97,12 @@ public class IdealGasLaw {
      *  - Textfields must call the trim() method on all their String values
      *  - Onnly 1/4 String can be an empty String ("")
      */
-    public static String solve(String pressure, String vol, String mol, String temp) {
+    public static String solve(String[] inputs) {
+        // Reassigned for readability
+        String pressure = inputs[0];
+        String vol = inputs[1];
+        String mol = inputs[2];
+        String temp = inputs[3];
         if(pressure.equals("")) {
             return solveForPressure(vol, mol, temp);
         } else if(vol.equals("")) {

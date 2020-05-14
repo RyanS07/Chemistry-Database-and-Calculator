@@ -23,7 +23,7 @@ public class TablePage extends Page {
         setRedirects();
     }
 
-    public void setRedirects() {
+    protected void setRedirects() {
         this.back.setOnAction(event -> {
             goTo("Home");
         });

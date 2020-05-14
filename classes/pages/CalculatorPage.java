@@ -3,11 +3,15 @@ package classes.pages;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -16,20 +20,29 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.layout.HBox;
 
+import classes.calculators.IdealGasLaw;
+import classes.calculators.Cross;
+
+
 public class CalculatorPage extends Page {
     private Button back;
-    private String[][] headerList = { { "Ideal Gas Law", "P", "V", "n", "T" },
-            { "Boyle's Law", "P1", "V1", "P2", "V2" }, { "Charles' Law", "V1", "T1", "V2", "T2" },
-            { "Gay-Lussac's Law", "P1", "T1", "P2", "T2" }, { "Avogadro's Hypthesis", "V1", "n1", "V2", "n2" },
-            { "Concentration", "C1", "V1", "C2", "V2" } };
-    private HashMap<String, String[]> headers = new HashMap<String, String[]>();
-    // fvi --> Four Variable Input
-    private TextField[] fvi = new TextField[4];
-    private HBox fviBox;
-    private Text[] fviHeader = new Text[4];
-    private HBox fviHeaderBox;
+    private String[] gasLawTitles = {"Ideal Gas Law", "Boyle's Law", "Charles' Law", 
+        "Gay-Lussac's Law", "Avogadro's Hypothesis"};
+    private String[][] gasLawHeaders = { 
+        { "Pressure", "Volume", "Moles", "Temperature" },
+        { "Pressure 1", "Volume 1", "Pressure 2", "Volume 2" }, 
+        { "Volume 1", "Temperature 1", "Volume 2", "Temperature 2" },
+        { "Pressure 1", "Temperature 1", "Pressure 2", "Temperature 2" }, 
+        { "Volume 1", "Moles 1", "Volume 2", "Moles 2" } 
+    };
+    private HashMap<String, String[]> gasLawHeaderMap = new HashMap<String, String[]>();
 
-    private VBox fviCalculator;
+    private MenuBar calcMenu;
+
+    private Text calcTitle;
+    private int numInputs = 4;
+    private String calcType;
+    private HBox gasLawBox;
 
     public CalculatorPage() {
         this.pane = new Pane();
@@ -38,13 +51,19 @@ public class CalculatorPage extends Page {
         this.back = setBackButton();
         this.pane.getChildren().add(this.back);
 
-        initHeaders();
-        initFVI();
+        setGasLawHeaderMap();
+        setCalcMenu();
+        setGasLawCalc(gasLawTitles[0]);
 
         this.scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             public void handle(KeyEvent e) {
                 if (e.getCode() == KeyCode.ENTER) {
-
+                    if(gasLawValidInput()) {
+                        System.out.println(calculate());
+                    } else {
+                        System.out.println("Invalid Entry");
+                    }
+                    
                 }
             }
         });
@@ -52,34 +71,97 @@ public class CalculatorPage extends Page {
         setRedirects();
     }
 
-    public void setRedirects() {
+    protected void setRedirects() {
         this.back.setOnAction(event -> {
             goTo("Tables");
         });
     }
 
-    public void initHeaders() {
-        for (int i = 0; i < headerList.length; i++) {
-            String[] subArray = Arrays.copyOfRange(headerList[i], 1, headerList.length);
-            headers.put(headerList[i][0], subArray);
+    private void setGasLawHeaderMap() {
+        for (int i = 0; i < gasLawTitles.length; i++) {
+            this.gasLawHeaderMap.put(this.gasLawTitles[i], this.gasLawHeaders[i]);
         }
     }
 
-    public void initFVI() {
-        fviBox = new HBox(20);
-        fviHeaderBox = new HBox(170);
-        fviCalculator = new VBox();
-        fviCalculator.setPadding(new Insets(20, 20, 20, 20));
-        for(int i = 0; i < this.fvi.length; i++) {
-            this.fvi[i] = new TextField();
-            this.fvi[i].setPrefColumnCount(10);
-            fviBox.getChildren().add(this.fvi[i]);
+    private void setGasLawCalc(String type) {
+        this.pane.getChildren().remove(this.calcTitle);
+        this.pane.getChildren().remove(this.gasLawBox);
+        this.gasLawBox = new HBox(20);
+        this.gasLawBox.setPadding(new Insets(20, 20, 20, 20));
+        this.calcType = type;
+        this.calcTitle = new Text(this.calcType);
+        this.calcTitle.setLayoutY(this.calcMenu.getLayoutY() + 100);
+        this.calcTitle.setLayoutX(20);
+        
+        for(int i = 0; i < numInputs; i++) {
+            VBox inputBox = new VBox(5);
+            inputBox.getChildren().add(new Text(gasLawHeaderMap.get(calcType)[i]));
+            inputBox.getChildren().add(new TextField());
+            this.gasLawBox.getChildren().add(inputBox);
+        }
+        this.gasLawBox.setLayoutY(this.calcTitle.getLayoutY() + 10);
 
-            this.fviHeader[i] = new Text(headerList[0][i+1]);
-            fviHeaderBox.getChildren().add(this.fviHeader[i]);
-        }             
-        fviCalculator.setLayoutY(100);
-        fviCalculator.getChildren().addAll(fviHeaderBox, fviBox);
-        this.pane.getChildren().add(fviCalculator);
+        this.pane.getChildren().addAll(this.calcTitle, this.gasLawBox);
+    }
+
+    private void updateGasLawCalc(String type) {
+        // this.pane.getChildren().remove(this.calcTitle);
+        // this.pane.getChildren().remove(this.gasLawBox);
+        setGasLawCalc(type);
+    }
+
+    private String calculate() {
+        // Pull values from TextFields
+        String[] inputs = new String[this.numInputs];
+        for(int i = 0; i < inputs.length; i++) {
+            VBox vb = (VBox) this.gasLawBox.getChildren().get(i);
+            TextField tf = (TextField) vb.getChildren().get(1);
+            inputs[i] = tf.getCharacters().toString().trim();
+            tf.clear();
+        }
+
+        // Uses headerList to assure same string
+        // calcType will only ever be assigned a value from title[]
+        if(this.calcType.equals(gasLawTitles[0])) {
+            return IdealGasLaw.solve(inputs);
+        } else if(this.calcType.equals(gasLawTitles[1])) {
+            return Cross.divide(inputs);
+        } else {
+            return Cross.multiply(inputs);
+        }
+    }
+
+    private boolean gasLawValidInput() {
+        int numEmpty = 0;
+        for(int i = 0; i < this.numInputs; i++) {
+            VBox vb = (VBox) this.gasLawBox.getChildren().get(i);
+            TextField tf = (TextField) vb.getChildren().get(1);
+            if(tf.getCharacters().toString().trim().equals("")) {
+                numEmpty++;
+            }
+        }
+        return numEmpty == 1;
+    }
+    
+    private void setCalcMenu() {
+        Menu gasLawCalcMenu = new Menu("Gas Law");
+        EventHandler<ActionEvent> event = new EventHandler<ActionEvent> () {
+            public void handle(ActionEvent e) { 
+                String selection = ((MenuItem) e.getSource()).getText();
+                updateGasLawCalc(selection);
+            }
+        };
+        for(int i = 0; i < gasLawTitles.length; i++) {
+            MenuItem mi = new MenuItem(gasLawTitles[i]);
+            mi.setOnAction(event);
+            gasLawCalcMenu.getItems().add(mi);
+        }
+        this.calcMenu = new MenuBar();
+        this.calcMenu.setLayoutX(20);
+        this.calcMenu.setLayoutY(100);
+
+        // Add Stoic Calc Menu Here
+        calcMenu.getMenus().add(gasLawCalcMenu);
+        this.pane.getChildren().add(calcMenu);
     }
 }

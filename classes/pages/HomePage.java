@@ -46,7 +46,7 @@ public class HomePage extends Page {
      *  - Only call after all buttons have been initialized
      *    - ie. At the end of the constructor
      */
-    public void setRedirects() {
+    protected void setRedirects() {
         // When start is pressed, go to "Tables" page
         this.start.setOnAction(event -> {
             goTo("Tables");

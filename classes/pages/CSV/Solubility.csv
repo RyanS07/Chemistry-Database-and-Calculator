@@ -1,0 +1,15 @@
+,acetate,bromide,carbonate,chlorite,chloride,hydroxide,iodite,nitrate,oxide,perchlorate,phosphate,sulphate,sulphide
+aluminum,S,S,N,S,S,I,S,S,I,S,I,S,D
+ammonium,S,S,S,S,S,N,S,S,N,S,S,S,S
+barium,S,S,I,S,S,S,S,S,sS,S,I,I,D
+calcium,S,S,I,S,S,S,S,S,sS,S,I,sS,I
+copper(II),S,S,N,S,S,I,S,S,I,S,I,S,I
+iron(II),S,S,I,S,S,I,S,S,I,S,I,S,I
+iron(III),S,S,N,S,S,I,S,S,I,S,I,sS,D
+lithium,S,S,sS,S,S,S,S,S,S,S,sS,S,S
+magnesium,S,S,I,S,S,I,S,S,I,S,I,S,D
+potassium,S,S,S,S,S,S,S,S,S,S,S,S,S
+silver,sS,I,I,S,I,N,I,S,I,S,I,sS,I
+sodium,S,S,S,S,S,S,S,S,S,S,S,S,S
+strontium,S,S,I,S,S,S,S,S,S,S,I,I,I
+zinc,S,S,I,S,S,I,S,S,I,S,I,S,I

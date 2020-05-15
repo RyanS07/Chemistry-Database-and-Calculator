@@ -1,12 +1,10 @@
 package classes.pages;
 
-import java.util.Arrays;
 import java.util.HashMap;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
@@ -71,12 +69,14 @@ public class CalculatorPage extends Page {
         setRedirects();
     }
 
+    // Called once
     protected void setRedirects() {
         this.back.setOnAction(event -> {
             goTo("Tables");
         });
     }
 
+    // Called once
     private void setGasLawHeaderMap() {
         for (int i = 0; i < gasLawTitles.length; i++) {
             this.gasLawHeaderMap.put(this.gasLawTitles[i], this.gasLawHeaders[i]);
@@ -84,8 +84,10 @@ public class CalculatorPage extends Page {
     }
 
     private void setGasLawCalc(String type) {
+        // Clears the old setup, if there is one
         this.pane.getChildren().remove(this.calcTitle);
         this.pane.getChildren().remove(this.gasLawBox);
+
         this.gasLawBox = new HBox(20);
         this.gasLawBox.setPadding(new Insets(20, 20, 20, 20));
         this.calcType = type;
@@ -102,12 +104,6 @@ public class CalculatorPage extends Page {
         this.gasLawBox.setLayoutY(this.calcTitle.getLayoutY() + 10);
 
         this.pane.getChildren().addAll(this.calcTitle, this.gasLawBox);
-    }
-
-    private void updateGasLawCalc(String type) {
-        // this.pane.getChildren().remove(this.calcTitle);
-        // this.pane.getChildren().remove(this.gasLawBox);
-        setGasLawCalc(type);
     }
 
     private String calculate() {
@@ -143,12 +139,13 @@ public class CalculatorPage extends Page {
         return numEmpty == 1;
     }
     
+    // Called once
     private void setCalcMenu() {
         Menu gasLawCalcMenu = new Menu("Gas Law");
         EventHandler<ActionEvent> event = new EventHandler<ActionEvent> () {
             public void handle(ActionEvent e) { 
                 String selection = ((MenuItem) e.getSource()).getText();
-                updateGasLawCalc(selection);
+                setGasLawCalc(selection);
             }
         };
         for(int i = 0; i < gasLawTitles.length; i++) {

@@ -12,6 +12,8 @@ public class IdealGasLaw {
     /* 
      * Description:
      *  - P = nRT/V
+     *  - This formula is a rearranged version of the ideal gas law above
+     *    - Variables are named to represent each variable
      *
      * Precondition: 
      *  - vol must be in (L) unit
@@ -26,12 +28,14 @@ public class IdealGasLaw {
         // Determines lowest sig fig amongst the three Data instnace
         int sf = SigFig.min(V, n, T);
 
-        return SigFig.set((n.getVal() * R * T.getVal()) / V.getVal(), sf) + "kPa";
+        return SigFig.set((n.getVal() * R * T.getVal()) / V.getVal(), sf);
     }
 
     /* 
      * Description:
      *  - V = nRT/P
+     *  - This formula is a rearranged version of the ideal gas law above
+     *    - Variables are named to represent each variable
      *
      * Precondition: 
      *  - pressure must be in (kPa) unit
@@ -45,12 +49,15 @@ public class IdealGasLaw {
         // Determines lowest sig fig amongst the three Data instnace
         int sf = SigFig.min(P, n, T);
         
-        return SigFig.set((n.getVal() * R * T.getVal()) / P.getVal(), sf) + "L";
+        return SigFig.set((n.getVal() * R * T.getVal()) / P.getVal(), sf)
+        ;
     }
 
     /* 
      * Description:
      *  - n = PV/RT
+     *  - This formula is a rearranged version of the ideal gas law above
+     *    - Variables are named to represent each variable
      *
      * Precondition: 
      *  - pressure must be in (kPa) unit
@@ -64,12 +71,14 @@ public class IdealGasLaw {
         // Determines lowest sig fig amongst the three Data instnace
         int sf = SigFig.min(P, V, T);
         
-        return SigFig.set((P.getVal() * V.getVal()) / (T.getVal() * R), sf) + "mol";
+        return SigFig.set((P.getVal() * V.getVal()) / (T.getVal() * R), sf);
     }
 
     /* 
      * Description:
      *  - T = PV/nR 
+     *  - This formula is a rearranged version of the ideal gas law above
+     *    - Variables are named to represent each variable
      *
      * Precondition: 
      *  - pressure must be in (kPa) unit
@@ -83,7 +92,7 @@ public class IdealGasLaw {
         // Determines lowest sig fig amongst the three Data instnace
         int sf = SigFig.min(P, V, n);
         
-        return SigFig.set((P.getVal() * V.getVal()) / (n.getVal() * R), sf) + "K";
+        return SigFig.set((P.getVal() * V.getVal()) / (n.getVal() * R), sf);
     }
 
     /* Description:

@@ -8,6 +8,7 @@ import classes.pages.InstructionsPage;
 import classes.pages.ElementPage;
 import classes.pages.CalculatorPage;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class Main extends Application{
@@ -23,6 +24,7 @@ public class Main extends Application{
         initializePages(stage);
         stage.setScene(pageMap.get("Home").getScene());
         stage.show();
+        
     }
 
     /* Description:

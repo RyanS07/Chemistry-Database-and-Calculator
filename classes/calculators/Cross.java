@@ -64,7 +64,7 @@ public class Cross {
         // Determines lowest sig fig amongst the three Data instnace
         int sf = SigFig.min(A1, B1, B2);
 
-        return SigFig.set((A1.getVal() / B1.getVal()) * B2.getVal() , sf) + A1.getUnit();
+        return SigFig.set((A1.getVal() / B1.getVal()) * B2.getVal() , sf);
     }
 
     /* Description:
@@ -80,7 +80,7 @@ public class Cross {
         // Determines lowest sig fig amongst the three Data instnace
         int sf = SigFig.min(A1, B1, A2);
 
-        return SigFig.set((B1.getVal() / A1.getVal()) * A2.getVal(), sf) + B1.getUnit();
+        return SigFig.set((B1.getVal() / A1.getVal()) * A2.getVal(), sf);
     }
 
     /* Description:
@@ -127,7 +127,7 @@ public class Cross {
         // Determines lowest sig fig amongst the three Data instnace
         int sf = SigFig.min(A1, B1, B2);
 
-        return SigFig.set((A1.getVal() * B1.getVal()) / B2.getVal(), sf) + A1.getUnit();
+        return SigFig.set((A1.getVal() * B1.getVal()) / B2.getVal(), sf);
     }
 
     /* Description:
@@ -143,6 +143,6 @@ public class Cross {
 
         int sf = SigFig.min(A1, B1, A2);
 
-        return SigFig.set((A1.getVal() * B1.getVal()) / A2.getVal(), sf) + B1.getUnit();
+        return SigFig.set((A1.getVal() * B1.getVal()) / A2.getVal(), sf);
     }
 }

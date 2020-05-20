@@ -4,16 +4,12 @@ package classes.calculators;
 
 // Instances of the Data class represent a value with a unit, in accordance with significant figure rules (sig fig)
 public class Data {
-    // Below are the conversion constants from each corresponding unit
-    private final double mlToL = 1.0/1000;
-    private final double mmHgTokPa = 101.3/760;
-    private final double atmTokPa = 101.3/1.00;
-    private final double psiTokPa = 101.3/14.7;
-
-    // In chemistry, all values have 3 attributes: a numerical value, a unit, and a number of sig figs
+    // In chemistry, all values have 3 attributes: a numerical value, and a number of sig figs
     private double val;
-    private String unit;
     private int sf;
+
+    // Only accepted units
+    public static String[] validUnits = {"kPa", "mmHg", "atm", "psi", "L", "ml", "mol", "K", "mol/L"};
 
     /* Description:
      *  - Constructor for Data instances
@@ -22,33 +18,21 @@ public class Data {
      * 
      * Precondition:
      *  - If Data instance is meant to represent temperature, unit must be K
-     *  - input must have a unit
+     *  - input must have one of the accepted units
+     *  - Validity must be checked before instantiating
      * 
      * Postcondition:
      *  - N/A
      */
     protected Data(String input) {
-        for(int i = 0; i < input.length(); i++) {
-            // Loop iterates until it has found the first char of the units
-            if(isUnitChar(input.charAt(i))) {
-                // input.substring(0, i) --> numerical value
-                this.val = Double.parseDouble(input.substring(0, i));
-                this.sf = SigFig.determine(input.substring(0, i));
-                // input.substring(i) --> units
-                this.unit = input.substring(i);
-                break;
-            }
-        }
+        this.val = Double.parseDouble(input);
+        this.sf = SigFig.determine(input);
+
         /* All calculators work with:
          *  - kPa for pressure
          *  - L for Volume
          *  - K for temperature        
          */
-        convertTokPa();
-        convertToL();
-        // System.out.println("Val: " + this.val);
-        // System.out.println("SF: " + this.sf);
-        // System.out.println("Unit: " + this.unit);
     }
 
     /* Description:
@@ -61,51 +45,26 @@ public class Data {
      * Postcondition:
      *  - N/A
      */
-    protected boolean isUnitChar(char input) {
+    protected static boolean isUnitChar(char input) {
         // returns true if the character is outside the 10 digits, and is not '.' or 'E'
         return !(input >= '0' && input <= '9' || input == '.' || input == 'E');
     }
 
-    /* Descrption:
-     *  - Converts a Data instance's val attribute and unit to be in L instead of ml
-     * 
-     * Precondition:
-     *  - this.unit is not an empty String ("")
-     * 
-     * Postcondition:
-     *  - N/A
-     */
-    protected void convertToL() {
-        if(this.unit.equals("ml")) {
-            this.val *= mlToL;
-            this.unit = "L";
+    public static boolean hasValidUnit(String data) {
+        boolean unitFound = false;
+        for(int i = 0; i < data.length(); i++) {
+            if(isUnitChar(data.charAt(i))) {
+                String unit = data.substring(i);
+                for(int j = 0; j < validUnits.length; j++) {
+                    if(unit.equals(validUnits[j])) {
+                        unitFound = unit.equals(validUnits[j]);
+                        break;
+                    }
+                }
+                break;
+            }
         }
-    }
-
-    /* Descrption:
-     *  - Converts a Data instance's val attribute and unit to be in kPa
-     *  
-     * Precondition:
-     *  - this.unit is not an empty String ("")
-     * 
-     * Postcondition:
-     *  - N/A
-     */
-    private void convertTokPa() {
-        switch(this.unit) {
-            case "mmHg":
-                this.val *= mmHgTokPa;
-                this.unit = "kPa";
-                break;
-            case "atm":
-                this.val *= atmTokPa;
-                this.unit = "kPa";
-                break;
-            case "psi":
-                this.val *= psiTokPa;
-                this.unit = "kPa";
-                break;
-        }
+        return unitFound;
     }
 
     /* Descrption:
@@ -120,17 +79,5 @@ public class Data {
      */
     protected double getVal() {
         return this.val;
-    }
-
-    /* Descrption:
-     *  - this.unit accessor
-     */
-    protected String getUnit() {
-        return this.unit;
-    }
-
-    @Override
-    public String toString() {
-        return this.val + this.unit;
     }
 }

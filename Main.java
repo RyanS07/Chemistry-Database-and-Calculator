@@ -4,11 +4,11 @@ import javafx.stage.Stage;
 import classes.pages.Page;
 import classes.pages.HomePage;
 import classes.pages.TablePage;
+import classes.pages.periodictable.Element;
 import classes.pages.InstructionsPage;
 import classes.pages.ElementPage;
 import classes.pages.CalculatorPage;
 
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class Main extends Application{
@@ -41,8 +41,7 @@ public class Main extends Application{
         pageMap.put(pageList[0], new HomePage());
         pageMap.put(pageList[1], new InstructionsPage());
         pageMap.put(pageList[2], new TablePage());
-        pageMap.put(pageList[3], new ElementPage());
-        pageMap.put(pageList[4], new CalculatorPage());
+        pageMap.put(pageList[3], new CalculatorPage());
     }
 
     public static void main(String[] args) {

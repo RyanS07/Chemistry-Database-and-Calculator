@@ -84,7 +84,7 @@ AtomicNumber,Element,Symbol,AtomicMass,NumberofNeutrons,NumberofProtons,Numberof
 83,Bismuth,Bi,208.98,126,83,83,6,15,solid,no,yes,yes,no,no,Metal,1.6,2.02,7.2856,9.81E+00,544.67,1837,19,Geoffroy the Younger,1753,0.122,6,5
 84,Polonium,Po,210,126,84,84,6,16,solid,yes,yes,no,no,yes,Metalloid,1.5,2,8.417,9.32E+00,527.15,1235,34,Curie,1898,0,6,6
 85,Astatine,At,210,125,85,85,6,17,solid,yes,yes,no,yes,no,Noble Gas,1.4,2.2,9.3,7.00E+00,575.15,610,21,Corson et al.,1940,0,6,7
-86,Radon,Rn,222,136,86,86,6,18,gas,yes,yes,yes,no,no,Alkali Metal,1.3,0,10.7485,9.73E-03,202.15,211.3,20,Dorn,1900,0.094,6,8
+86,Radon,Rn,222,136,86,86,6,18,gas,yes,yes,no,yes,no,Alkali Metal,1.3,0,10.7485,9.73E-03,202.15,211.3,20,Dorn,1900,0.094,6,8
 87,Francium,Fr,223,136,87,87,7,1,solid,yes,yes,yes,no,no,Alkaline Earth Metal,0,0.7,4.0727,1.87E+00,300.15,950,21,Perey,1939,0,7,1
 88,Radium,Ra,226,138,88,88,7,2,solid,yes,yes,yes,no,no,Actinide,0,0.9,5.2784,5.50E+00,973.15,2010,15,Pierre and Marie Curie,1898,0,7,2
 89,Actinium,Ac,227,138,89,89,7,3,solid,yes,yes,yes,no,no,Actinide,0,1.1,5.17,1.01E+01,1323.15,3471,11,Debierne/Giesel,1899,0.12,7,0

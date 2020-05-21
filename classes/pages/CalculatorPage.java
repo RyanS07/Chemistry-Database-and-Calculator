@@ -28,7 +28,6 @@ import javafx.scene.text.Text;
 import javafx.scene.layout.HBox;
 
 import classes.calculators.IdealGasLaw;
-import classes.pages.rows.VapourPressureRow;
 import classes.calculators.Cross;
 
 
@@ -53,13 +52,6 @@ public class CalculatorPage extends Page {
     private String calcType;
     private Text calcResponse;
     private HBox gasLawBox;
-
-    private VBox vapourPressureTableBox;
-    private Text vapourPressureTableTitle;
-    private TableView<VapourPressureRow> vapourPressureTable;
-    private String[] vapourPressureTableProperties = {"Temperature", "Pressure"};
-    private String[] vapourPressureTableHeaders = {"Temperature (K)", "Pressure (kPa)"};
-    private String vapourPressureFileName = "VapourPressure.csv";
 
     public CalculatorPage() {
         this.pane = new Pane();
@@ -125,12 +117,6 @@ public class CalculatorPage extends Page {
         this.gasLawCalcBox.setLayoutX(20);
         this.gasLawCalcBox.getChildren().addAll(this.calcTitle, this.gasLawBox, this.calcResponse);
 
-        if(this.calcType.equals(gasLawTitles[0])) {
-            setVapourPressureTable();
-        } else {
-            clearVapourPressureTable();
-        }
-
         this.pane.getChildren().add(this.gasLawCalcBox);
     }
 
@@ -157,7 +143,6 @@ public class CalculatorPage extends Page {
         } else {
             return "Invalid Entry";
         }
-        
     }
 
     // Check if no units provided
@@ -184,7 +169,13 @@ public class CalculatorPage extends Page {
                 int start = headerText.indexOf('(') + 1;
                 int end = headerText.indexOf(')');
                 // Will never get IndexOutOfBounds because headers are predefined
-                this.calcResponse.setText(" = " + calculate() + headerText.substring(start, end));
+                String answer = calculate();
+                if(answer.equals("Invalid Entry")) {
+                    this.calcResponse.setText(" " + answer);
+                } else {
+                    this.calcResponse.setText(" = " + answer + headerText.substring(start, end));
+                }
+                
                 break;
             } 
         }  
@@ -192,13 +183,13 @@ public class CalculatorPage extends Page {
     
     // Called once
     private void setCalcMenu() {
-        Menu gasLawCalcMenu = new Menu("Gas Law");
         EventHandler<ActionEvent> event = new EventHandler<ActionEvent> () {
             public void handle(ActionEvent e) { 
                 String selection = ((MenuItem) e.getSource()).getText();
                 setGasLawCalc(selection);
             }
         };
+        Menu gasLawCalcMenu = new Menu("Gas Law");
         for(int i = 0; i < gasLawTitles.length; i++) {
             MenuItem mi = new MenuItem(gasLawTitles[i]);
             mi.setOnAction(event);
@@ -212,60 +203,5 @@ public class CalculatorPage extends Page {
         // Add Concentration Menu
         this.calcMenu.getMenus().add(gasLawCalcMenu);
         this.pane.getChildren().add(calcMenu);
-    }
-
-    private void setVapourPressureTable() {
-        this.vapourPressureTableTitle = new Text("Vapour Pressure of Water");
-        this.vapourPressureTableTitle.setLayoutX(20);
-
-        // Initialized to emptp list to avoid "Not initialized" warning
-        ObservableList<VapourPressureRow> vapourPressureValues = FXCollections.observableArrayList();
-        try {
-            vapourPressureValues = getVapourPressureValues();
-        } catch (IOException e) {
-            System.out.println("Solubilty.csv not found");
-        }
-        this.vapourPressureTable = new TableView<VapourPressureRow>();
-        for(int i = 0; i < vapourPressureTableProperties.length; i++) {
-            TableColumn<VapourPressureRow, String> column;
-            // Assigned on separate line to improve readability
-            column = new TableColumn<VapourPressureRow, String>(vapourPressureTableHeaders[i]);
-            // Source: https://stackoverflow.com/questions/13455326/javafx-tableview-text-alignment
-            column.setStyle("-fx-alignment: CENTER;");
-            column.setPrefWidth(200);
-            column.setCellValueFactory(new PropertyValueFactory<VapourPressureRow, String>(vapourPressureTableProperties[i]));
-            column.setSortable(false);
-            this.vapourPressureTable.getColumns().add(column);
-        }
-        this.vapourPressureTable.setItems(vapourPressureValues);
-        this.vapourPressureTable.setPrefHeight(300);
-        this.vapourPressureTable.setSelectionModel(null);
-        this.vapourPressureTable.setLayoutY(this.vapourPressureTableTitle.getLayoutY() + 20);        
-
-        this.vapourPressureTableBox = new VBox();
-        this.vapourPressureTableBox.setPadding(new Insets(20,20,20,20));
-        this.vapourPressureTableBox.getChildren().addAll(this.vapourPressureTableTitle, this.vapourPressureTable);
-
-        this.vapourPressureTableBox.setLayoutY(this.gasLawCalcBox.getLayoutY() + 150);
-        this.vapourPressureTableBox.setLayoutX(20);
-        this.pane.getChildren().add(this.vapourPressureTableBox);
-    }
-
-    private ObservableList<VapourPressureRow> getVapourPressureValues() throws IOException {
-        String filePath = System.getProperty("user.dir") + "\\classes\\pages\\CSV\\" + this.vapourPressureFileName;
-        File file = new File(filePath);
-        BufferedReader br = new BufferedReader(new FileReader(file));
-        ObservableList<VapourPressureRow> fileValues = FXCollections.observableArrayList();
-		String line;
-		while ((line = br.readLine()) != null) {
-            String[] row = line.split(",");
-			fileValues.add(new VapourPressureRow(row[0], row[1]));
-        }
-        br.close();
-        return fileValues;
-    }
-
-    private void clearVapourPressureTable() {
-        this.pane.getChildren().remove(this.vapourPressureTableBox);
     }
 }

@@ -1,7 +1,6 @@
 package classes.pages;
 
-import classes.pages.rows.SolubilityRow;
-import classes.pages.rows.ActivityRow;
+import classes.pages.periodictable.Element;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -11,7 +10,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 
+import javafx.beans.value.ObservableValue;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
@@ -21,16 +23,19 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.util.Callback;
 
 public class TablePage extends Page {
     private Button back;
     private Button toCalculators;
-    private static String[] solubilityProperties = { "Header", "Acetate", "Bromide", "Carbonate", "Chlorite",
-            "Chloride", "Hydroxide", "Iodite", "Nitrate", "Oxide", "Perchlorate", "Phosphate", "Sulphate", "Sulphide" };
+
+    ArrayList<Element> periodicTableValues = new ArrayList<Element>();
+
     // https://stackoverflow.com/questions/11145681/how-to-convert-a-string-with-unicode-encoding-to-a-string-of-letters
     // https://en.wikipedia.org/wiki/Unicode_subscripts_and_superscripts
     // Learning about Unicode:
@@ -39,16 +44,22 @@ public class TablePage extends Page {
             "CO\u2083\u00B2\u207B", "ClO\u2082\u207B", "Cl\u207B", "OH\u207B", "I\u207B", "NO\u2083\u207B",
             "O\u00B2\u207B", "ClO\u2084\u207B", "PO\u2084\u00B3\u207B", "SO\u2084\u00B2\u207B",
             "SO\u2083\u00B2\u207B" };
-    private TableView<SolubilityRow> solubilityTable;
+    private TableView<String[]> solubilityTable = new TableView<String[]>();
     private String solubilityFileName = "SolubilityTable.csv";
-    private TableView<ActivityRow> activitySeries;
+
+    private static String[] activityHeaders = {"Element", "Displaces H\u207A in"};
+    private TableView<String[]> activitySeries = new TableView<String[]>();
     private String activityFileName = "ActivitySeries.csv";
+
+    private static String[] vapourPressureHeaders = {"Temperature (K)", "Pressure (kPa)"};
+    private TableView<String[]> vapourPressureTable = new TableView<String[]>();
+    private String vapourPressureFileName = "VapourPressure.csv";
 
     private MenuBar tableMenu;
     private Text tableTitle;
     private VBox tableBox;
     private String tableType;
-    private String[] tableOptions = {"Periodic Table", "Solubility Table", "Activity Series"};
+    private String[] tableOptions = {"Periodic Table", "Solubility Table", "Activity Series", "Vapour Pressure Table"};
 
     public TablePage() {
         this.pane = new Pane();
@@ -113,10 +124,8 @@ public class TablePage extends Page {
 
         if(this.tableType.equals("Periodic Table")) {
             setPeriodicTable();
-        } else if(this.tableType.equals("Solubility Table")) {
-            setSolubilityTable();
-        } else if(this.tableType.equals("Activity Series")) {
-            setActivitySeries();
+        } else {
+            createTable(this.tableType);
         }
 
         this.pane.getChildren().addAll(this.tableBox);
@@ -125,55 +134,11 @@ public class TablePage extends Page {
     private void setPeriodicTable() {
 
     }
-
-    private void setSolubilityTable() {
-        // Initialized to emptp list to avoid "Not initialized" warning
-        ObservableList<SolubilityRow> solubilityValues = FXCollections.observableArrayList();
-        try {
-            solubilityValues = getSolubilityValues();
-        } catch (IOException e) {
-            System.out.println("Solubilty.csv not found");
-        }
-        this.solubilityTable = new TableView<SolubilityRow>();
-        for(int i = 0; i < solubilityValues.get(0).length(); i++) {
-            TableColumn<SolubilityRow, String> column;
-            // Assigned on separate line to improve readability
-            column = new TableColumn<SolubilityRow, String>(solubilityHeaders[i]);
-            // Source: https://stackoverflow.com/questions/13455326/javafx-tableview-text-alignment
-            column.setStyle("-fx-alignment: CENTER;");
-            column.setPrefWidth(75);
-            column.setCellValueFactory(new PropertyValueFactory<SolubilityRow, String>(solubilityProperties[i]));
-            column.setSortable(false);
-            this.solubilityTable.getColumns().add(column);
-        }
-        this.solubilityTable.setItems(solubilityValues);
-        this.solubilityTable.setPrefHeight(440);
-        this.solubilityTable.setSelectionModel(null);
-
-        this.tableBox.getChildren().add(this.solubilityTable);
-    }
-
-    private ObservableList<SolubilityRow> getSolubilityValues() throws IOException {
-        String filePath = System.getProperty("user.dir") + "\\classes\\pages\\CSV\\" + this.solubilityFileName;
-        File file = new File(filePath);
-        BufferedReader br = new BufferedReader(new FileReader(file));
-        ObservableList<SolubilityRow> fileValues = FXCollections.observableArrayList();
-		String line;
-		while ((line = br.readLine()) != null) {
-            String[] row = line.split(",");
-            for(int i = 0; i < row.length; i++) {
-                row[i] = parseSubstance(row[i]);
-            }
-			fileValues.add(new SolubilityRow(row));
-        }
-        br.close();
-        return fileValues;
-    }
     
     // https://stackoverflow.com/questions/11145681/how-to-convert-a-string-with-unicode-encoding-to-a-string-of-letters
     // Strings can only turn unicode into chars in initialization
     // If stored in a text file, they need to be parsed explicitly
-    private String parseSubstance(String code) {
+    private String parse(String code) {
         String[] parts = code.split("/");
         String decoded = "";
         for(int i = 0; i < parts.length; i++) {
@@ -188,49 +153,76 @@ public class TablePage extends Page {
         return decoded;
     }
 
-    private void setActivitySeries() {
-        ObservableList<ActivityRow> activityValues = FXCollections.observableArrayList();
-        try {
-            activityValues = getActivityValues();
-        } catch (IOException e) {
-            System.out.println("ActivitySeries.csv not found");
+    private void createTable(String type) {
+        ObservableList<String[]> csv = FXCollections.observableArrayList();
+        TableView<String[]> table = new TableView<String[]>();
+        String[] headers = new String[1];
+        int columnWidth = 0;
+        int tableHeight = 0;
+
+        if(type.equals("Solubility Table")) {
+            try {
+                csv = readCSV(this.solubilityFileName);
+            } catch(IOException e) {
+                System.out.println(this.solubilityFileName + " could not be found.");
+            }
+            headers = solubilityHeaders;
+            columnWidth = 75;
+            tableHeight = 440;
+        } else if(type.equals("Activity Series")) {
+            try {
+                csv = readCSV(this.activityFileName);
+            } catch(IOException e) {
+                System.out.println(this.activityFileName + " could not be found.");
+            }
+            headers = activityHeaders;
+            columnWidth = 150;
+            tableHeight = 525;
+        } else if(type.equals("Vapour Pressure Table")) {
+            try {
+                csv = readCSV(this.vapourPressureFileName);
+            } catch(IOException e) {
+                System.out.println(this.vapourPressureFileName + " could not be found.");
+            }
+            headers = vapourPressureHeaders;
+            columnWidth = 200;
+            tableHeight = 500;
         }
 
-        this.activitySeries = new TableView<ActivityRow>();
-
-        TableColumn<ActivityRow, String> elementColumn = new TableColumn<ActivityRow, String>("Element");
-        elementColumn.setStyle("-fx-alignment: CENTER;");
-        elementColumn.setPrefWidth(150);
-        elementColumn.setCellValueFactory(new PropertyValueFactory<ActivityRow, String>("element"));
-        elementColumn.setSortable(false);
-        this.activitySeries.getColumns().add(elementColumn);
-
-        TableColumn<ActivityRow, String> statusColumn = new TableColumn<ActivityRow, String>("Displaces H\u207A in");
-        statusColumn.setStyle("-fx-alignment: CENTER;");
-        statusColumn.setPrefWidth(250);
-        statusColumn.setCellValueFactory(new PropertyValueFactory<ActivityRow, String>("status"));
-        statusColumn.setSortable(false);
-        this.activitySeries.getColumns().add(statusColumn);
-
-        this.activitySeries.setItems(activityValues);
-        this.activitySeries.setPrefHeight(525);
-        this.activitySeries.setSelectionModel(null);
-
-        this.tableBox.getChildren().add(this.activitySeries);
+        for(int i = 0; i < headers.length; i++) {
+            TableColumn<String[], String> column = new TableColumn<String[], String>(headers[i]);
+            // Source: https://stackoverflow.com/questions/20769723/populate-tableview-with-two-dimensional-array
+            int colNo = i;
+            column.setCellValueFactory(new Callback<CellDataFeatures<String[], String>, ObservableValue<String>>() {
+                @Override
+                public ObservableValue<String> call(CellDataFeatures<String[], String> p) {
+                    return new SimpleStringProperty((p.getValue()[colNo]));
+                }
+            });
+            // Source: https://stackoverflow.com/questions/13455326/javafx-tableview-text-alignment\
+            column.setStyle("-fx-alignment: CENTER;");
+            column.setPrefWidth(columnWidth);
+            column.setSortable(false);
+            table.getColumns().add(column);
+        }
+        table.setItems(csv);
+        table.setPrefHeight(tableHeight);
+        table.setSelectionModel(null);
+        this.tableBox.getChildren().add(table);
     }
 
-    private ObservableList<ActivityRow> getActivityValues() throws IOException {
-        String filePath = System.getProperty("user.dir") + "\\classes\\pages\\CSV\\" + this.activityFileName;
+    private ObservableList<String[]> readCSV(String fileName) throws IOException {
+        String filePath = System.getProperty("user.dir") + "\\classes\\pages\\CSV\\" + fileName;
         File file = new File(filePath);
         BufferedReader br = new BufferedReader(new FileReader(file));
-        ObservableList<ActivityRow> fileValues = FXCollections.observableArrayList();
+        ObservableList<String[]> fileValues = FXCollections.observableArrayList();
 		String line;
 		while ((line = br.readLine()) != null) {
-            String[] element = line.split(",");
-            for(int i = 0; i < element.length; i++) {
-                element[i] = parseSubstance(element[i]);
+            String[] row = line.split(",");
+            for(int i = 0; i < row.length; i++) {
+                row[i] = parse(row[i]);
             }
-            fileValues.add(new ActivityRow(element[0], element[1]));
+            fileValues.add(row);
         }
         br.close();
         return fileValues;

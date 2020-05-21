@@ -30,7 +30,6 @@ import javafx.scene.layout.HBox;
 import classes.calculators.IdealGasLaw;
 import classes.pages.rows.VapourPressureRow;
 import classes.calculators.Cross;
-import classes.calculators.Data;
 
 
 public class CalculatorPage extends Page {

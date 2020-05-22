@@ -1,10 +1,5 @@
 public class Metalloid extends Element {
 
-    // Empty default constructor
-    public Metalloid() {
-        super();
-    }
-
     // Non-empty constructor
     public Metalloid(String[] details) {
         super(details);
@@ -12,6 +7,7 @@ public class Metalloid extends Element {
 
     // Implement abstract method from Element class for Metalloids
     public String determineIon() {
-        return "+" + this.getNumberOfValence();
+        String elecConfig = getElectronicConfiguration().get();
+        return "+" + elecConfig.charAt(elecConfig.length()-1);
     }
 }

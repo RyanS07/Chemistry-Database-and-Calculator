@@ -1,10 +1,5 @@
 public class Nonmetal extends Element {
 
-    // Empty default constructor
-    public Nonmetal() {
-        super();
-    }
-
     // Non-empty constructor
     public Nonmetal(String[] details) {
         super(details);
@@ -12,6 +7,7 @@ public class Nonmetal extends Element {
 
     // Implement abstract method from Element class for Non-metals
     public String determineIon() {
-        return "+" + this.getNumberOfValence();
+        String elecConfig = getElectronicConfiguration().get();
+        return "+" + elecConfig.charAt(elecConfig.length()-1);
     }
 }

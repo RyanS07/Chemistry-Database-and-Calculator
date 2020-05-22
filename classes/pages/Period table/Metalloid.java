@@ -7,7 +7,7 @@ public class Metalloid extends Element {
 
     // Implement abstract method from Element class for Metalloids
     public String determineIon() {
-        String elecConfig = getElectronicConfiguration().get();
+        String elecConfig = getElectronicConfiguration().get().replaceAll("\\s","");
         return "+" + elecConfig.charAt(elecConfig.length()-1);
     }
 }

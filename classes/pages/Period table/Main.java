@@ -35,12 +35,12 @@ public class Main {
             String[] elems = periodicTable.split("\n");
             for(int i = 1; i < elems.length; i++) {
                 String[] details = elems[i].split(","); // splits each row into their individual elements
-                if(details[12].equals("yes")) {
-                    metals.put(i, new Metal(details));
-                } else if(details[13].equals("yes")) {
-                    nonmetals.put(i, new Nonmetal(details));
-                } else if(details[14].equals("yes")) {
+                if(details[12].equals("metalloid\n")) {
                     metalloids.put(i, new Metalloid(details));
+                } else if(details[12].contains("metal")) {
+                    metals.put(i, new Metal(details));
+                } else {
+                    nonmetals.put(i, new Nonmetal(details));
                 }
             }
         } catch(IOException e) { // catches any input/output exception

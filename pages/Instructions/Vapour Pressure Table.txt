@@ -1,0 +1,2 @@
+This lookup table displays the vapour pressure of water (kPa) 
+at certain temperatures (K).

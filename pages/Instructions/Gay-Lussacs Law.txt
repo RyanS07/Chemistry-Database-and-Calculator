@@ -1,0 +1,14 @@
+Formula: P1/T1 = P2/T2
+
+Explanation:
+Gay-Lussac's Law is a relationship between an ideal gas' pressure and temperature, 
+given both its volume and moles are held constant. Pressure 2 and Temperature 2 
+refer to the pressure and temperature of the ideal gas at a different point in time. 
+ - Ex: 
+         10.0kPa/2.00K = P2/1.00K
+                            P2 = (10.0kPa/2.00K) * 1.00K
+                            P2 = 5.00kPa
+
+Guidelines:
+Please input 3/4 values below. The calculator does account for significant figures,
+so input the correct amount of significant figures as well. No units.

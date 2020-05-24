@@ -1,0 +1,16 @@
+Formula: (C1)(V1) = (C2)(V2)
+
+Explanation:
+Multiplying the concentration (mol/L) and volume (L) of a solution will result in
+the moles of that solution. Utilizing this constant, the formula above can be 
+derived to solve for the concentration or volume of the same solution at a 
+different point in time. For example, adding more water would increase the volume
+and lower the concentration. 
+ - Ex: 
+    (10.0mol/L)(2.00L) = (C2)(1.00L)
+                            C2 = (10.0mol/L)(2.00L) / 1.00L
+                            C2 = 20.0mol/L
+
+Guidelines:
+Please input 3/4 values below. The calculator does account for significant figures,
+so input the correct amount of significant figures as well. No units.

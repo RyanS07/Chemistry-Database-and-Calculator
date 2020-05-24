@@ -1,0 +1,6 @@
+This table displays the solubility of certain ionic compounds in water. Cations are on the left and anions are on the top.
+ - S = Soluble
+ - sS = Slightly Soluble
+ - I = Insoluble
+ - D = Decomposes in water 
+ - N = Does not exist

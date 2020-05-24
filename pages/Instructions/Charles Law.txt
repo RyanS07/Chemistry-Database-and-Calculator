@@ -1,0 +1,14 @@
+Formula: V1/T1 = V2/T2
+
+Explanation:
+Charles' Law is a relationship between an ideal gas' volume and temperature, given 
+both its pressure and moles are held constant. Volume 2 and Temperature 2 refer to 
+the volume and temperature of the ideal gas at a different point in time. 
+ - Ex: 
+             10.0L/2.00K = V2/1.00K
+                            V2 = (10.0L/2.00K) * 1.00K
+                            V2 = 5.00L
+
+Guidelines:
+Please input 3/4 values below. The calculator does account for significant figures,
+so input the correct amount of significant figures as well. No units.

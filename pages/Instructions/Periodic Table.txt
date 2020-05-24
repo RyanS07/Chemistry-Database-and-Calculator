@@ -1,0 +1,5 @@
+Select elements by clicking on their icon. Once all desired elements are selected, press "See Details". 
+ - Red Icons = Metals (Alkali Metals, Alkaline Earth Metals, Transitional Metals, Post-Transitional Metals)
+ - Green Icons = Gases (Nonmetals, Halogens, Noble Gases)
+ - Yellow Icons = Metalloids
+ - Grey Icons = Other (Lanthanoids, Actinoids)

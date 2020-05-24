@@ -1,13 +1,7 @@
-package classes.pages;
+package pages;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.HashMap;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -16,10 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
@@ -27,8 +18,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.layout.HBox;
 
-import classes.calculators.IdealGasLaw;
-import classes.calculators.Cross;
+import calculators.IdealGasLaw;
+import calculators.Cross;
 
 
 public class CalculatorPage extends Page {
@@ -67,7 +58,7 @@ public class CalculatorPage extends Page {
         this.scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             public void handle(KeyEvent e) {
                 if (e.getCode() == KeyCode.ENTER) {
-                    displayAnswer();
+                    displayResponse();
                 }
             }
         });
@@ -121,64 +112,67 @@ public class CalculatorPage extends Page {
     }
 
     private String calculate() {
-        if(gasLawValidInput()) {
-            // Pull values from TextFields
-            String[] inputs = new String[this.numInputs];
-            for(int i = 0; i < inputs.length; i++) {
-                VBox vb = (VBox) this.gasLawBox.getChildren().get(i);
-                TextField tf = (TextField) vb.getChildren().get(1);
-                inputs[i] = tf.getCharacters().toString().trim();
-                tf.clear();
-            }
+        // Pull values from TextFields
+        String[] inputs = new String[this.numInputs];
+        for(int i = 0; i < inputs.length; i++) {
+            VBox vb = (VBox) this.gasLawBox.getChildren().get(i);
+            TextField tf = (TextField) vb.getChildren().get(1);
+            inputs[i] = tf.getCharacters().toString().trim();
+            tf.clear();
+        }
 
-            // Uses headerList to assure same string
-            // calcType will only ever be assigned a value from title[]
-            if(this.calcType.equals(gasLawTitles[0])) {
-                return IdealGasLaw.solve(inputs);
-            } else if(this.calcType.equals(gasLawTitles[1])) {
-                return Cross.divide(inputs);
-            } else {
-                return Cross.multiply(inputs);
-            }
+        // Uses headerList to assure same string
+        // calcType will only ever be assigned a value from title[]
+        if(this.calcType.equals(gasLawTitles[0])) {
+            return IdealGasLaw.solve(inputs);
+        } else if(this.calcType.equals(gasLawTitles[1])) {
+            return Cross.divide(inputs);
         } else {
-            return "Invalid Entry";
+            return Cross.multiply(inputs);
         }
     }
 
-    // Check if no units provided
     private boolean gasLawValidInput() {
         int numEmpty = 0;
         for(int i = 0; i < this.numInputs; i++) {
             VBox vb = (VBox) this.gasLawBox.getChildren().get(i);
             TextField tf = (TextField) vb.getChildren().get(1);
             String fieldValue = tf.getCharacters().toString().trim();
-            if(fieldValue.equals("")) {
+            boolean isValid = true;
+            for(char digit : fieldValue.toCharArray()) {
+                if(digit < '0' || digit > '9') {
+                    isValid = false;
+                    break;
+                }
+            }
+            if(!isValid || fieldValue.equals("")) {
                 numEmpty++;
             } 
         }
         return numEmpty == 1;
     }
 
-    private void displayAnswer() {
-        for(int i = 0; i < this.numInputs; i++) {
-            VBox vb = (VBox) this.gasLawBox.getChildren().get(i);
-            Text header = (Text) vb.getChildren().get(0);
-            TextField tf = (TextField) vb.getChildren().get(1);
-            if(tf.getCharacters().toString().trim().equals("")) {
-                String headerText = header.getText();
-                int start = headerText.indexOf('(') + 1;
-                int end = headerText.indexOf(')');
-                // Will never get IndexOutOfBounds because headers are predefined
-                String answer = calculate();
-                if(answer.equals("Invalid Entry")) {
-                    this.calcResponse.setText(" " + answer);
-                } else {
-                    this.calcResponse.setText(" = " + answer + headerText.substring(start, end));
-                }
-                
-                break;
-            } 
-        }  
+    private void displayResponse() {
+        if(gasLawValidInput()) {
+            for(int i = 0; i < this.numInputs; i++) {
+                VBox vb = (VBox) this.gasLawBox.getChildren().get(i);
+                Text header = (Text) vb.getChildren().get(0);
+                TextField tf = (TextField) vb.getChildren().get(1);
+                if(tf.getCharacters().toString().trim().equals("")) {
+                    String headerText = header.getText();
+                    int start = headerText.indexOf('(') + 1;
+                    int end = headerText.indexOf(')');
+                    String unit = headerText.substring(start, end);
+                    // Will never get IndexOutOfBounds because headers are predefined
+                    String answer = calculate();
+                    this.calcResponse.setText(" = " + answer + unit);                    
+                    break;
+                } 
+            }  
+        } else {
+            this.calcResponse.setText(" Invalid Entry");
+        }
+        
     }
     
     // Called once

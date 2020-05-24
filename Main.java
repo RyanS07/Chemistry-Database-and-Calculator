@@ -1,13 +1,11 @@
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-import classes.pages.Page;
-import classes.pages.HomePage;
-import classes.pages.TablePage;
-import classes.pages.periodictable.Element;
-import classes.pages.InstructionsPage;
-import classes.pages.ElementPage;
-import classes.pages.CalculatorPage;
+import pages.Page;
+import pages.HomePage;
+import pages.TablePage;
+import pages.InstructionsPage;
+import pages.CalculatorPage;
 
 import java.util.HashMap;
 
@@ -15,7 +13,7 @@ public class Main extends Application{
     // HashMap containing all pages of the app and how to get to them
     public HashMap<String, Page> pageMap = new HashMap<String, Page>();
     // Array containing each page key for pageMap
-    public String pageList[] = {"Home", "Instructions", "Tables", "ElementPage", "Calculators"};
+    public String pageList[] = {"Home", "Instructions", "Tables", "Calculators"};
     public String appTitle = "Balkulator";
 
     @Override

@@ -1,4 +1,4 @@
-package classes.pages;
+package pages;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Scene;

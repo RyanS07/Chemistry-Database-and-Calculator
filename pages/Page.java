@@ -1,4 +1,4 @@
-package classes.pages;
+package pages;
 
 import java.util.HashMap;
 

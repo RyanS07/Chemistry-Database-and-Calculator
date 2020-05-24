@@ -4,7 +4,6 @@ import javafx.stage.Stage;
 import pages.Page;
 import pages.HomePage;
 import pages.TablePage;
-import pages.InstructionsPage;
 import pages.CalculatorPage;
 
 import java.util.HashMap;
@@ -13,22 +12,21 @@ public class Main extends Application{
     // HashMap containing all pages of the app and how to get to them
     public HashMap<String, Page> pageMap = new HashMap<String, Page>();
     // Array containing each page key for pageMap
-    public String pageList[] = {"Home", "Instructions", "Tables", "Calculators"};
+    public String pageList[] = {"Home", "Tables", "Calculators"};
     public String appTitle = "Balkulator";
 
     @Override
     public void start(Stage stage) {
-        stage.setTitle(appTitle);
+        stage.setTitle(this.appTitle);
         initializePages(stage);
-        stage.setScene(pageMap.get("Home").getScene());
+        stage.setScene(this.pageMap.get("Home").getScene());
         stage.show();
-        
     }
 
     /* Description:
-     *  - Initializes all page instances and puts them in pageMap
+     *  - Initializes all Page instances and puts them in pageMap
      *  
-     * Precondition:
+     * Special Note:
      *  - Page.setStage() and Page.setPageMap() must be called before any methods of each Page
      *    subclass is used
      *  - All methods rely on having static variables Page.stage and Page.pageMap
@@ -36,10 +34,11 @@ public class Main extends Application{
     public void initializePages(Stage stage) {
         Page.setStage(stage);
         Page.setPageMap(pageMap);
-        pageMap.put(pageList[0], new HomePage());
-        pageMap.put(pageList[1], new InstructionsPage());
-        pageMap.put(pageList[2], new TablePage());
-        pageMap.put(pageList[3], new CalculatorPage());
+        // All Page instances are stored in a HashMap so that pages can be accessed through a 
+        // String name. See setRedirects() in each Page subclass for an example.
+        this.pageMap.put(pageList[0], new HomePage());
+        this.pageMap.put(pageList[1], new TablePage());
+        this.pageMap.put(pageList[2], new CalculatorPage());
     }
 
     public static void main(String[] args) {

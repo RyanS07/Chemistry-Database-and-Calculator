@@ -1,0 +1,15 @@
+Formula: PV = nRT
+
+Explanation: 
+The Ideal Gas Law is a relationship between an ideal gas' pressure (P), volume(V),
+moles (n) and temperature (T). R is a constant that applies for all ideal gases.
+If 3/4 traits are known, the 4th can be solved for. 
+R = 8.314 L*kPa/(mol * K)
+ - Ex: 
+                (P)(2.00L) = (0.20mol)(R)(298K)
+                             P = (0.20mol)(R)(298K) / 2.00L
+                             P = 248kPa
+
+Guidelines:
+Please input 3/4 values below. The calculator does account for significant figures,
+so input the correct amount of significant figures as well. No units. 

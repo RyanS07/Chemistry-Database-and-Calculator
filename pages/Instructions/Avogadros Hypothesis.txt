@@ -1,0 +1,14 @@
+Formula: V1/n1 = V2/n2
+
+Explanation:
+Avogadro's Hypothesis is a relationship between an ideal gas' volume and moles, 
+given both its pressure and temperature are held constant. Volume 2 and Moles 2 
+refer to the volume and moles of the ideal gas at a different point in time. 
+ - Ex: 
+          10.0L/2.00mol = V2/1.00mol
+                            V2 = (10.0L/2.00mol) * 1.00mol
+                            V2 = 5.00L
+
+Guidelines:
+Please input 3/4 values below. The calculator does account for significant figures,
+so input the correct amount of significant figures as well. No units.

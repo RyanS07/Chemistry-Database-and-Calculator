@@ -1,7 +1,12 @@
 package pages;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashMap;
 
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
@@ -20,15 +25,21 @@ public abstract class Page {
 
     // Final variables for the corresponding component
     protected final static double width = 1250;
-    protected final static double height = 900;
+    protected final static double height = 950;
     protected final static double buttonWidth = 100;
     protected final static double buttonHeight = 50;
+    protected final static Insets boxPadding = new Insets(20,20,20,20);
         
     /* Every subclass of the Page class has to redirect to another page.
      * The methodology the Page class is based on HTML, where each new
      * page has its own file (in this case its own class). 
      */
     protected abstract void setRedirects();
+
+    public Page() {
+        this.pane = new Pane();
+        this.scene = new Scene(this.pane, Page.width, Page.height);
+    }
 
     /* Description:
      *  - See each Page subclass's setRedirects() for example
@@ -83,5 +94,22 @@ public abstract class Page {
     // Sets static variable Page.pageMap to pageMap
     public static void setPageMap(HashMap<String, Page> pageMap) {
         Page.pageMap = pageMap;
+    }
+    
+    protected String getGuide(String type) throws IOException {
+        int index = type.indexOf('\'');
+        if(index != -1) {
+            type = type.substring(0, index) + type.substring(index+1);
+        }
+        String filePath = System.getProperty("user.dir") + "\\pages\\Instructions\\" + type + ".txt";
+        File file = new File(filePath);
+        BufferedReader br = new BufferedReader(new FileReader(file));
+        String fileValues = "";
+		String line;
+		while ((line = br.readLine()) != null) {
+            fileValues += line + "\n";
+        }
+        br.close();
+        return fileValues;
     }
 }

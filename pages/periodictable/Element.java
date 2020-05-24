@@ -13,7 +13,7 @@ public abstract class Element {
      */
     private Button icon;
     // All buttons are squares, so only one dimension size
-    private double iconSize = 50;
+    private double iconSize = 45;
     // The style Strings are the CSS properties for the icon in the three states
     // Two are set as protected so they can be access
     private String defaultStyle;
@@ -65,7 +65,7 @@ public abstract class Element {
             String value = details[i];
             String property = propertyList[i];
             try {
-                state = Element.class.getDeclaredField(propertyList[i]);
+                state = Element.class.getDeclaredField(property);
                 if(property.equals("ionRadius")) {
                     int key = value.indexOf('(');
                     if(key != -1) {

@@ -19,7 +19,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -46,21 +45,27 @@ public class TablePage extends Page {
     private ArrayList<Element> periodicTableValues;
     private String[] elementTableProperties;
     private String[] elementTableHeaders = {
-        "#", "Symbol", "Name", "Molar Mass (g/mol)", "Electron Configuration", "Period", "Group", 
-        "Electronegativity", "Van Del Waals Radius (\u212B)", "ionRadius (\u212B)", 
-        "1st Ionization Energy (kJ/mol)", "Electron Affinity (kJ/mol)", "State", "Melting Point (K)", 
-        "Boiling Point (K)", "Density (g/ml)", "Group Name", "Ion Charge"
+        "#", "Symbol", "Name", "Molar Mass (g/mol)", 
+        "Electron Configuration", "Period", "Group", 
+        "Electronegativity", "Van Del Waals Radius (\u212B)", 
+        "ionRadius (\u212B)", "1st Ionization Energy (kJ/mol)", 
+        "Electron Affinity (kJ/mol)", "State", "Melting Point (K)", 
+        "Boiling Point (K)", "Density (g/ml)", "Group Name", 
+        "Ion Charge"
     };
 
     private MenuBar tableMenu;
     private Text tableTitle;
+    private Text instructions;
     private VBox tableBox;
     private String tableType;
-    private String[] tableOptions = {"Periodic Table", "Solubility Table", "Activity Series", "Vapour Pressure Table"};
+    private String[] tableOptions = {
+        "Periodic Table", "Solubility Table", 
+        "Activity Series", "Vapour Pressure Table"
+    };
 
     public TablePage() {
-        this.pane = new Pane();
-        this.scene = new Scene(this.pane, Page.width, Page.height);
+        super();
 
         this.back = setBackButton();
         this.pane.getChildren().add(this.back);
@@ -114,30 +119,28 @@ public class TablePage extends Page {
 
         this.tableBox = new VBox(20);
         this.tableBox.setPadding(new Insets(20, 20, 20, 20));
-        this.tableBox.setLayoutY(this.tableMenu.getLayoutY() + 100);
+        this.tableBox.setLayoutY(this.tableMenu.getLayoutY() + 50);
         this.tableBox.setLayoutX(20);
         this.tableBox.getChildren().add(this.tableTitle);
 
-        createTable(this.tableType);
-
-        this.pane.getChildren().addAll(this.tableBox);
-    }
-
-    private void createTable(String type) {
         ObservableList<String[]> csv = FXCollections.observableArrayList();
         TableView<String[]> table = new TableView<String[]>();
-        String[] headers = new String[1];
+        String[] headers;
         int columnWidth = 0;
         int tableHeight = 0;
-
+        String guide = "";
+        instructions = new Text();
+        
         if(type.equals(tableOptions[0])) {
             createPeriodicTable();
+            this.pane.getChildren().addAll(this.tableBox);
             return;
         } else {
             try {
                 csv = readCSV(type + ".csv");
+                guide = getGuide(type);
             } catch(IOException e) {
-                System.out.println(type + ".csv could not be read.");
+                e.printStackTrace();
             }
             if(type.equals(tableOptions[1])) {
                 columnWidth = 75;
@@ -147,9 +150,11 @@ public class TablePage extends Page {
                 tableHeight = 525;
             } else if(type.equals(tableOptions[3])) {
                 columnWidth = 200;
-                tableHeight = 500;
+                tableHeight = 550;
             }
         }
+        instructions.setText(guide);
+        this.tableBox.getChildren().add(instructions);
         headers = csv.get(0);
         csv.remove(0);
 
@@ -174,12 +179,15 @@ public class TablePage extends Page {
         table.setPrefHeight(tableHeight);
         table.setSelectionModel(null);
         this.tableBox.getChildren().add(table);
+        this.pane.getChildren().addAll(this.tableBox);
     }
 
     private void createPeriodicTable() {
         periodicTableValues = new ArrayList<Element>();
+        this.instructions = new Text();
         try {
             periodicTableValues = getPeriodicTableValues(tableOptions[0] + ".csv");
+            this.instructions.setText(getGuide("Periodic Table"));
         } catch(IOException e) {
             System.out.println( tableOptions[0]+ ".csv could not be parsed.");
         }
@@ -204,7 +212,7 @@ public class TablePage extends Page {
             clearSelection();
         });
 
-        this.tableBox.getChildren().addAll(periodicTable, elementRedirectBox, clearSelection);
+        this.tableBox.getChildren().addAll(this.instructions, periodicTable, elementRedirectBox, clearSelection);
     }
 
     private void createElementDisplay() {
@@ -216,7 +224,7 @@ public class TablePage extends Page {
                 clickedElements.add(currentElement);
             }
         } 
-        Text errorMessage = (Text) ((HBox) this.tableBox.getChildren().get(2)).getChildren().get(1);
+        Text errorMessage = (Text) ((HBox) this.tableBox.getChildren().get(3)).getChildren().get(1);
         if(clickedElements.size() == 0) {
             errorMessage.setText("Please select at least 1 element.");
             return;

@@ -12,7 +12,7 @@ public class Main extends Application{
     // HashMap containing all Page instances of the app and how to get to them
     public HashMap<String, Page> pageMap = new HashMap<String, Page>();
     // Array containing each page key for pageMap
-    public String pageList[] = {"Home", "Tables", "Calculators"};
+    public String pageList[] = {"Home", "Table", "Calculator"};
  
     @Override
     public void start(Stage stage) {

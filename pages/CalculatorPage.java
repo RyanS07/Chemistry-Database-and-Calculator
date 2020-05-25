@@ -36,7 +36,7 @@ public class CalculatorPage extends Page {
 
     private Text calcTitle;
     private int numInputs = 4;
-    private HBox inputBox;
+    private HBox inputHBox;
     private VBox calcBox;
     private String calcType;
     private Text calcResponse;
@@ -51,23 +51,26 @@ public class CalculatorPage extends Page {
         // additional behavior unique to each subclass. 
         super();
 
-
+        // Creating the back button to return to the previous page.
+        // Note, this only initializes the button. It does not tell the
+        // button where to redirect to when clicked (see setRedirects()). 
         this.back = setBackButton();
         this.pane.getChildren().add(this.back);
 
-        setCalcMap();
         setCalcMenu();
-        setCalc(this.calcList[0]);
-
-        
-
+        // this.calcList[0], "Ideal Gas Law", is the default calculator. 
+        this.calcType = this.calcList[0];
+        setCalcMap();
+        setCalc(this.calcType);
         setRedirects();
     }
 
-    // Called once
+    /* This method establishes how each page redirects to each other. 
+     * 
+     */
     protected void setRedirects() {
         this.back.setOnAction(event -> {
-            goTo("Tables");
+            goTo("Table");
         });
     }
 
@@ -90,8 +93,8 @@ public class CalculatorPage extends Page {
         // Clears the old setup, if there is one
         this.pane.getChildren().remove(this.calcBox);
 
-        this.inputBox = new HBox(20);
-        this.inputBox.setPadding(Page.boxPadding);
+        this.inputHBox = new HBox(20);
+        this.inputHBox.setPadding(Page.boxPadding);
         
         this.calcType = type;
         this.calcTitle = new Text(this.calcType);
@@ -112,19 +115,19 @@ public class CalculatorPage extends Page {
             VBox inputField = new VBox(5);
             inputField.getChildren().add(new Text(calcMap.get(calcType)[i]));
             inputField.getChildren().add(new TextField());
-            this.inputBox.getChildren().add(inputField);
+            this.inputHBox.getChildren().add(inputField);
         }
-        this.inputBox.setLayoutY(this.calcTitle.getLayoutY() + 10);
+        this.inputHBox.setLayoutY(this.calcTitle.getLayoutY() + 10);
 
         this.calcResponse = new Text();
-        this.calcResponse.setLayoutY((this.inputBox.getLayoutY() + 10));
+        this.calcResponse.setLayoutY((this.inputHBox.getLayoutY() + 10));
         this.calcResponse.setLayoutX(20);
 
         this.calcBox = new VBox(20);
         this.calcBox.setPadding(Page.boxPadding);
         this.calcBox.setLayoutY(this.calcMenu.getLayoutY() + 50);
         this.calcBox.setLayoutX(20);
-        this.calcBox.getChildren().addAll(this.calcTitle, guideBox, this.inputBox, this.calcResponse);
+        this.calcBox.getChildren().addAll(this.calcTitle, guideBox, this.inputHBox, this.calcResponse);
 
         this.scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             public void handle(KeyEvent e) {
@@ -141,7 +144,7 @@ public class CalculatorPage extends Page {
         // Pull values from TextFields
         String[] inputs = new String[this.numInputs];
         for(int i = 0; i < inputs.length; i++) {
-            VBox vb = (VBox) this.inputBox.getChildren().get(i);
+            VBox vb = (VBox) this.inputHBox.getChildren().get(i);
             TextField tf = (TextField) vb.getChildren().get(1);
             inputs[i] = tf.getCharacters().toString().trim();
             tf.clear();
@@ -161,7 +164,7 @@ public class CalculatorPage extends Page {
     private boolean isValidInput() {
         int numEmpty = 0;
         for(int i = 0; i < this.numInputs; i++) {
-            VBox vb = (VBox) this.inputBox.getChildren().get(i);
+            VBox vb = (VBox) this.inputHBox.getChildren().get(i);
             TextField tf = (TextField) vb.getChildren().get(1);
             String fieldValue = tf.getCharacters().toString().trim();
             boolean isValid = true;
@@ -181,7 +184,7 @@ public class CalculatorPage extends Page {
     private void displayResponse() {
         if(isValidInput()) {
             for(int i = 0; i < this.numInputs; i++) {
-                VBox vb = (VBox) this.inputBox.getChildren().get(i);
+                VBox vb = (VBox) this.inputHBox.getChildren().get(i);
                 Text header = (Text) vb.getChildren().get(0);
                 TextField tf = (TextField) vb.getChildren().get(1);
                 if(tf.getCharacters().toString().trim().equals("")) {

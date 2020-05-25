@@ -86,7 +86,7 @@ public class TablePage extends Page {
             goTo("Home");
         });
         this.toCalculators.setOnAction(event -> {
-            goTo("Calculators");
+            goTo("Calculator");
         });
     }
 

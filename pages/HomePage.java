@@ -47,7 +47,7 @@ public class HomePage extends Page {
     protected void setRedirects() {
         // When start is pressed, go to "Tables" page
         this.start.setOnAction(event -> {
-            goTo("Tables");
+            goTo("Table");
         });
     }
 }

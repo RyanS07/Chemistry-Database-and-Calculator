@@ -5,7 +5,6 @@ import java.util.HashMap;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -22,19 +21,17 @@ import calculators.Cross;
 
 
 public class CalculatorPage extends Page {
+    // The back button that returns to the table page.
     private Button back;
-    private String[] calcTitles = {"Ideal Gas Law", "Boyle's Law", "Charles' Law", 
+    /* A list of all the different types of calculators. Usage ranges from creating
+     * a Menu object to locating .txt files. 
+     */
+    private String[] calcList = {"Ideal Gas Law", "Boyle's Law", "Charles' Law", 
         "Gay-Lussac's Law", "Avogadro's Hypothesis", "Concentration"};
-    private String[][] calcHeaders = { 
-        { "Pressure (kPa)", "Volume (L)", "Moles (mol)", "Temperature (K)" },
-        { "Pressure 1 (kPa)", "Volume 1 (L)", "Pressure 2 (kPa)", "Volume 2 (L)" }, 
-        { "Volume 1 (L)", "Temperature 1 (K)", "Volume 2 (L)", "Temperature 2 (K)" },
-        { "Pressure 1 (kPa)", "Temperature 1 (K)", "Pressure 2 (kPa)", "Temperature 2 (K)" }, 
-        { "Volume 1 (L)", "Moles 1 (mol)", "Volume 2 (L)", "Moles 2 (mol)" },
-        { "Concentration 1 (mol/L)", "Volume 1 (L)", "Concentration 2 (mol/L)", "Volume 2 (L)"} 
-    };
+    // A HashMap containing each calcType's input headers. Used to create input fields.
     private HashMap<String, String[]> calcMap = new HashMap<String, String[]>();
 
+    // The Menu that displays the different calculator options.
     private MenuBar calcMenu;
 
     private Text calcTitle;
@@ -44,23 +41,25 @@ public class CalculatorPage extends Page {
     private String calcType;
     private Text calcResponse;
 
+    /* The constructor is the only public method of any Page subclass. This lowers
+     * the number of method calls in the client program, improving readability and
+     * centralizing all of the code pertaining to a specific Page subclass to that 
+     * file. 
+     */
     public CalculatorPage() {
+        // All Page subclasses build on Page, so they call super() and add some
+        // additional behavior unique to each subclass. 
         super();
+
 
         this.back = setBackButton();
         this.pane.getChildren().add(this.back);
 
         setCalcMap();
         setCalcMenu();
-        setCalc(calcTitles[0]);
+        setCalc(this.calcList[0]);
 
-        this.scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            public void handle(KeyEvent e) {
-                if (e.getCode() == KeyCode.ENTER) {
-                    displayResponse();
-                }
-            }
-        });
+        
 
         setRedirects();
     }
@@ -74,8 +73,16 @@ public class CalculatorPage extends Page {
 
     // Called once
     private void setCalcMap() {
-        for (int i = 0; i < calcTitles.length; i++) {
-            this.calcMap.put(this.calcTitles[i], this.calcHeaders[i]);
+        String[][] calcHeaders = { 
+            { "Pressure (kPa)", "Volume (L)", "Moles (mol)", "Temperature (K)" },
+            { "Pressure 1 (kPa)", "Volume 1 (L)", "Pressure 2 (kPa)", "Volume 2 (L)" }, 
+            { "Volume 1 (L)", "Temperature 1 (K)", "Volume 2 (L)", "Temperature 2 (K)" },
+            { "Pressure 1 (kPa)", "Temperature 1 (K)", "Pressure 2 (kPa)", "Temperature 2 (K)" }, 
+            { "Volume 1 (L)", "Moles 1 (mol)", "Volume 2 (L)", "Moles 2 (mol)" },
+            { "Concentration 1 (mol/L)", "Volume 1 (L)", "Concentration 2 (mol/L)", "Volume 2 (L)"} 
+        };
+        for (int i = 0; i < this.calcList.length; i++) {
+            this.calcMap.put(this.calcList[i], calcHeaders[i]);
         }
     }
 
@@ -119,6 +126,14 @@ public class CalculatorPage extends Page {
         this.calcBox.setLayoutX(20);
         this.calcBox.getChildren().addAll(this.calcTitle, guideBox, this.inputBox, this.calcResponse);
 
+        this.scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            public void handle(KeyEvent e) {
+                if (e.getCode() == KeyCode.ENTER) {
+                    displayResponse();
+                }
+            }
+        });
+
         this.pane.getChildren().add(this.calcBox);
     }
 
@@ -134,9 +149,9 @@ public class CalculatorPage extends Page {
 
         // Uses headerList to assure same string
         // calcType will only ever be assigned a value from title[]
-        if(this.calcType.equals(calcTitles[0])) {
+        if(this.calcType.equals(this.calcList[0])) {
             return IdealGasLaw.solve(inputs);
-        } else if(this.calcType.equals(calcTitles[1]) || this.calcType.equals(calcTitles[5])) {
+        } else if(this.calcType.equals(this.calcList[1]) || this.calcType.equals(this.calcList[5])) {
             return Cross.divide(inputs);
         } else {
             return Cross.multiply(inputs);
@@ -195,8 +210,8 @@ public class CalculatorPage extends Page {
             }
         };
         Menu gasLawCalcMenu = new Menu("Calculators");
-        for(int i = 0; i < calcTitles.length; i++) {
-            MenuItem mi = new MenuItem(calcTitles[i]);
+        for(int i = 0; i < this.calcList.length; i++) {
+            MenuItem mi = new MenuItem(this.calcList[i]);
             mi.setOnAction(event);
             gasLawCalcMenu.getItems().add(mi);
         }

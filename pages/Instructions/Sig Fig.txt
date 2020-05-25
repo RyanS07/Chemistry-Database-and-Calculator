@@ -2,7 +2,7 @@
         
         Significant Figures (Sig Fig) is a set of rules that try to retain data precision. 
         The number of sig figs of a number is defined as the number of digits a number 
-        has,excluding leading zeros. For example, 2.00 has 3 sig figs, but 0.02 has 1 sig 
+        has, excluding leading zeros. For example, 2.00 has 3 sig figs, but 0.02 has 1 sig 
         fig. When multiplying and dividing, under the rules of sig fig, the product or 
         quotient is only as precise as the lowest sig fig. For example:
           - 2.00 * 2.0 * 4.00 = 16

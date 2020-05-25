@@ -256,7 +256,7 @@ public class TablePage extends Page {
 
     private void clearSelection() {
         for(int i = 0; i < this.periodicTableValues.size(); i++) {
-            this.periodicTableValues.get(i).setClicked(false);
+            this.periodicTableValues.get(i).resetClicked();
         }
     }
 

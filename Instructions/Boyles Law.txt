@@ -13,4 +13,4 @@ the pressure and volume of the ideal gas at a different point in time.
 Guidelines:
 Please input 3/4 values below. The calculator does account for significant figures,
 so input the correct amount of significant figures as well. No units. Press ENTER
-to use the calculator. 
+to use the calculator. Note: inputing scientific notation with "e" is not supported.

@@ -7,7 +7,6 @@ import elements.Metalloid;
 import elements.Nonmetal;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -181,7 +180,7 @@ public class TablePage extends Page {
         this.instructions = new Text();
         
         // As mentioned above, the Periodic Table is unique from the 
-        // other 3 tables.
+        // other 3 tables. The remaining 3 tables are part of the else. 
         if(type.equals(this.tableOptions[0])) {
             createPeriodicTable();
             return;
@@ -192,107 +191,158 @@ public class TablePage extends Page {
             } catch(IOException e) {
                 e.printStackTrace();
             }
-            if(type.equals(tableOptions[1])) {
+            // The remaining 3 tables have the exact same algorithm, with
+            // different values assigned below. 
+            if(type.equals(this.tableOptions[1])) {
                 columnWidth = 75;
                 tableHeight = 440;
-            } else if(type.equals(tableOptions[2])) {
+            } else if(type.equals(this.tableOptions[2])) {
                 columnWidth = 150;
                 tableHeight = 525;
-            } else if(type.equals(tableOptions[3])) {
+            } else if(type.equals(this.tableOptions[3])) {
                 columnWidth = 200;
                 tableHeight = 550;
             }
         }
-        instructions.setText(guide);
-        this.tableBox.getChildren().add(instructions);
+        this.instructions.setText(guide);
+        this.tableBox.getChildren().add(this.instructions);
+        // All table text files (besides the Periodic Table) store their table
+        // headers in the first line. 
         headers = csv.get(0);
         csv.remove(0);
 
+         // The block below creates each TableColumn for the respective TableView. 
         for(int i = 0; i < headers.length; i++) {
             TableColumn<String[], String> column = new TableColumn<String[], String>(headers[i]);
-            // Source: https://stackoverflow.com/questions/20769723/populate-tableview-with-two-dimensional-array
+            /* A CallBack is a block of executable code that is passed in as an argument to another block. The 
+             * other block is then expected to call back/execute the callback function at a given time. 
+             * 
+             * In this case, the CallBack is executed when the cellValueFactory of the TableColumn instance is
+             * set. The cellValueFactory then takes this CallBack and puts a returned ObservableValue<String> 
+             * in each cell of the TableColumn, allowing the table to update whenever each ObservableValue is 
+             * changed. 
+             * 
+             * A CellDataFeatures instance is a wrapper class representing all features about a given cell. This 
+             * CallBack requires a CellDataFeatures instance to return the ObservableValue. The rest is handled
+             * in the background by the TableView and TableColumn instances. 
+             * 
+             * Source: https://stackoverflow.com/questions/20769723/populate-tableview-with-two-dimensional-array
+             */
             int colNo = i;
-            // Research CallBack
             column.setCellValueFactory(new Callback<CellDataFeatures<String[], String>, ObservableValue<String>>() {
                 @Override
                 public ObservableValue<String> call(CellDataFeatures<String[], String> p) {
                     return new SimpleStringProperty((p.getValue()[colNo]));
                 }
             });
-            // Source: https://stackoverflow.com/questions/13455326/javafx-tableview-text-alignment\
+            // Sets the CSS style of the column so the text is centered. 
             column.setStyle("-fx-alignment: CENTER;");
             column.setPrefWidth(columnWidth);
+            // Stops the user from sorting the table (Table is pre-organized).
             column.setSortable(false);
             table.getColumns().add(column);
         }
         table.setItems(csv);
         table.setPrefHeight(tableHeight);
+        // Makes it so the user cannot select a specified cell (the user has no need). 
         table.setSelectionModel(null);
         this.tableBox.getChildren().add(table);
         this.pane.getChildren().addAll(this.tableBox);
     }
 
+    // Creates the periodic table to display. 
     private void createPeriodicTable() {
         this.periodicTableValues = new ArrayList<Element>();
         this.instructions = new Text();
         try {
-            this.periodicTableValues = getPeriodicTableValues(tableOptions[0] + ".csv");
+            // See below for an explanation on getPeriodTableValues()
+            this.periodicTableValues = getPeriodicTableValues(this.tableOptions[0]);
             this.instructions.setText(getText("Periodic Table"));
         } catch(IOException e) {
-            System.out.println( tableOptions[0]+ ".csv could not be parsed.");
+            System.out.println(this.tableOptions[0]+ ".csv could not be parsed.");
         }
 
+        /* Encapsulates the each Element in this.periodicTableValues into one 
+         * display Node.
+         */
         Pane periodicTable = new Pane();
         for(int i = 0; i < this.periodicTableValues.size(); i++) {
             Element currentElement = this.periodicTableValues.get(i);
+            // Icon positioning is done in the Element class. 
             Button icon = currentElement.getIcon();
             periodicTable.getChildren().add(icon);
         }
 
+        // elementRedirectBox stores the the button to redirect to the Element
+        // Display table and the errorMessage if the user has an invalid input. 
         HBox elementRedirectBox = new HBox(10);
         Button seeDetails = new Button("See Details");
         seeDetails.setOnAction(event -> {
+            // Input validation is handled in this method
             createElementDisplay();            
         });
         Text errorMessage = new Text("");
         elementRedirectBox.getChildren().addAll(seeDetails, errorMessage);
 
+        // clearSelection deselects all icons the user pressed on the periodic
+        // table.
         Button clearSelection = new Button("Clear Selection");
         clearSelection.setOnAction(event -> {
             clearSelection();
         });
 
         this.tableBox.getChildren().addAll(this.instructions, periodicTable, elementRedirectBox, clearSelection);
-
         this.pane.getChildren().addAll(this.tableBox);
     }
 
+    /* Creates a TableView to display all the information about the selected
+     * elements. 
+     */
     private void createElementDisplay() {
         TableView<Element> elementTable = new TableView<Element>();
         ObservableList<Element> clickedElements = FXCollections.observableArrayList();
+        // Creates an ObservableList to store all the selected elements. 
         for(int i = 0; i < this.periodicTableValues.size(); i++) {
             Element currentElement = this.periodicTableValues.get(i);
             if(currentElement.gotClicked()) {
                 clickedElements.add(currentElement);
             }
         } 
+        // Handling input validation
         Text errorMessage = (Text) ((HBox) this.tableBox.getChildren().get(3)).getChildren().get(1);
+        // If no elements were clicked, prompt the user to select one. 
         if(clickedElements.size() == 0) {
             errorMessage.setText("Please select at least 1 element.");
             return;
         } else {
             this.tableBox.getChildren().clear();
         }
+ 
+        /* Obtains the Table headers for the Element display
+         * The file stores the values (comma separated) on one line.
+         * The reason the file is a .txt file (and not a .csv) is because 
+         * getText() only looks through .txt files. Overloading getText() 
+         * just to read one file did not seem necessary. 
+         */
         try { 
             this.elementTableHeaders = getText("Element Table Headers").split(",");
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
         for(int i = 0; i < this.elementTableProperties.length; i++) {
             String currentHeader = this.elementTableHeaders[i];
             String currentProperty = this.elementTableProperties[i];
             TableColumn<Element, String> column = new TableColumn<Element, String>(currentHeader);
+            /* The if clause below tries to make column size dynamic, based on which property it
+             * has to display. 
+             * 
+             * The formula for size is (30px + (number of characters in the header) * 10px)
+             */
             if(currentHeader.equals("Name")) {
+                // Name does not use the formula because some elemnt names are really long
+                // Ex: Einsteinium
                 column.setPrefWidth(150);
             } else {
                 column.setPrefWidth(30 + this.elementTableHeaders[i].length() * 10);
@@ -302,73 +352,94 @@ public class TablePage extends Page {
             elementTable.getColumns().add(column);
         }
         elementTable.setItems(clickedElements);
-        elementTable.setPrefWidth(1150);
+        elementTable.setPrefWidth(Page.width - 100);
 
         Button returnButton = new Button("Return to Periodic Table");
         returnButton.setOnAction(event -> {
-            setTable(tableOptions[0]);
+            // Returns back to the periodic table.
+            setTable(this.tableOptions[0]);
         });
         this.tableBox.getChildren().addAll(elementTable, returnButton);
     }
 
+    // Sets all element's to "not clicked".
     private void clearSelection() {
         for(int i = 0; i < this.periodicTableValues.size(); i++) {
             this.periodicTableValues.get(i).resetClicked();
         }
     }
 
+    /* Reads the csv containing the periodic table values and parses 
+     * it into an ArrayList<Element>. 
+     */
     private ArrayList<Element> getPeriodicTableValues(String fileName) throws IOException {
-        String filePath = System.getProperty("user.dir") + "\\CSV\\" + fileName;
+        String filePath = System.getProperty("user.dir") + "\\CSV\\" + fileName + ".csv";
         File file = new File(filePath);
         BufferedReader br = new BufferedReader(new FileReader(file));
         ArrayList<Element> periodicTableValues = new ArrayList<Element>();
-        String line;
+        // The sets below contain the key words (pulled from the csv directly) 
+        // that state what kind of element each line of the csv is. 
         String[] metalSet = {"alkali metal", "alkaline earth metal", "transition metal", "post-transition metal", "metal"};
         String[] nonmetalSet = {"nonmetal", "noble gas", "halogen"};
         String[] metalloidSet = {"metalloid"};
-        int counter = 0;
+
+        String line = br.readLine();
+        String[] values = line.split(",");
+        /* The name of each element property is stored in the first line
+         * of the csv. 
+         * Creates an array to store the properties, with the additional
+         * "ionCharge" property. 
+         */
+        this.elementTableProperties = new String[values.length + 1];
+        for(int i = 0; i < values.length; i++) {
+            this.elementTableProperties[i] = values[i].trim();
+        }
+        this.elementTableProperties[values.length] = "ionCharge";
+        // Assigns it to the Element static variable propertyList
+        // so that the constructor can properly fill out its Fields. 
+        Element.setPropertyList(this.elementTableProperties);
+        
+        // Loop reads the file until it reaches the end
         while((line = br.readLine()) != null) {
-            String[] values = line.split(",");
+            values = line.split(",");
             for(int i = 0; i < values.length; i++) {
                 values[i] = values[i].trim();
+                // A large portion of values are blank. This is presumable because no
+                // research has been done on them (Ex: radioactive elements). As such,
+                // if a value is blank, change it to "No Data".
                 if(values[i].equals("")) {
                     values[i] = "No Data";
                 }
             }
-            if(counter == 0) {
-                this.elementTableProperties = new String[values.length + 1];
-                for(int i = 0; i < values.length; i++) {
-                    this.elementTableProperties[i] = values[i];
-                }
-                this.elementTableProperties[values.length] = "ionCharge";
-                Element.setPropertyList(this.elementTableProperties);
+            // Index 16 pulled from manually reading the csv
+            String type = values[16];
+            // Creates a Metal, Nonmetal, Metalloid, or Filler instance 
+            // based on what type the element is. 
+            if(isPartOfSet(type, metalSet)) {
+                periodicTableValues.add(new Metal(values));
+            } else if(isPartOfSet(type, nonmetalSet)) {
+                periodicTableValues.add(new Nonmetal(values));
+            } else if(isPartOfSet(type, metalloidSet)) {
+                periodicTableValues.add(new Metalloid(values));
             } else {
-                String type = values[16];
-                if(isPartOfSet(type, metalSet)) {
-                    periodicTableValues.add(new Metal(values));
-                } else if(isPartOfSet(type, nonmetalSet)) {
-                    periodicTableValues.add(new Nonmetal(values));
-                } else if(isPartOfSet(type, metalloidSet)) {
-                    periodicTableValues.add(new Metalloid(values));
-                } else {
-                    periodicTableValues.add(new Filler(values));
-                }
+                periodicTableValues.add(new Filler(values));
             }
-            counter++;
         }
         br.close();
         return periodicTableValues;
     }
 
+    // Determines if key is part of set
     private boolean isPartOfSet(String key, String[] set) {
-        for(int i = 0; i < set.length; i++) {
-            if(key.equals(set[i])) {
+        for(String datum : set) {
+            if(key.equals(datum)) {
                 return true;
             }
         }
         return false;
     }
 
+    // Reads a csv and parses it into an ObservableList to use in a TableView
     private ObservableList<String[]> readCSV(String fileName) throws IOException {
         String filePath = System.getProperty("user.dir") + "\\CSV\\" + fileName + ".csv";
         File file = new File(filePath);
@@ -379,6 +450,7 @@ public class TablePage extends Page {
             String[] row = line.split(",");
             for(int i = 0; i < row.length; i++) {
                 if(!row[i].equals("")) {
+                    // See below for an explanation on parse()
                     row[i] = parse(row[i]);
                 }
             }
@@ -388,24 +460,24 @@ public class TablePage extends Page {
         return fileValues;
     }
 
-    // https://stackoverflow.com/questions/11145681/how-to-convert-a-string-with-unicode-encoding-to-a-string-of-letters
-    // Strings can only turn unicode into chars in initialization
-    // If stored in a text file, they need to be parsed explicitly
-    // code cannot be ""
-    // https://stackoverflow.com/questions/11145681/how-to-convert-a-string-with-unicode-encoding-to-a-string-of-letters
-    // https://en.wikipedia.org/wiki/Unicode_subscripts_and_superscripts
-    // Learning about Unicode:
-    // https://docs.oracle.com/javase/tutorial/i18n/text/unicode.html
+    /* parse() converts any unicode characters into a String representation. 
+     * Sources/Research:
+     *  - https://docs.oracle.com/javase/tutorial/i18n/text/unicode.html
+     *  - https://stackoverflow.com/questions/11145681/how-to-convert-a-string-with-unicode-encoding-to-a-string-of-letters
+     *  - https://en.wikipedia.org/wiki/Unicode_subscripts_and_superscripts
+     */
     private String parse(String code) {
         String[] parts = code.split("/");
         String decoded = "";
-        for(int i = 0; i < parts.length; i++) {
-            if(parts[i].charAt(0) == 'u') {
-                parts[i] = parts[i].substring(1);
-                // Decodes String containing hexadecimal value to an int
-                decoded += (char) Integer.parseInt(parts[i], 16);
+        for(String part : parts) {
+            // See Solubility Table.csv for an example of what code would look like
+            if(part.charAt(0) == 'u') {
+                // Unicode is represented in hex (less digits but more combinations 
+                // than decimal). Converst from hexideciaml to decimal, then casts 
+                // to a char.
+                decoded += (char) Integer.parseInt(part.substring(1), 16);
             } else {
-                decoded += parts[i];
+                decoded += part;
             }
         }
         return decoded;

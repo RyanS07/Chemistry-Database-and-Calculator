@@ -1,3 +1,4 @@
+Volume 1 (L),Moles 1 (mol),Volume 2 (L),Moles 2 (mol)
 Formula: V1/n1 = V2/n2
 
 Explanation:
@@ -11,4 +12,5 @@ refer to the volume and moles of the ideal gas at a different point in time.
 
 Guidelines:
 Please input 3/4 values below. The calculator does account for significant figures,
-so input the correct amount of significant figures as well. No units.
+so input the correct amount of significant figures as well. No units. Press ENTER
+to use the calculator. 

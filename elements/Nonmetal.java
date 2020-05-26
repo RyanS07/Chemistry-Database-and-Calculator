@@ -1,4 +1,4 @@
-package pages.periodictable;
+package elements;
 
 public class Nonmetal extends Element {
     /* Since the Nonmetal class builds on the Element class, it calls the super()

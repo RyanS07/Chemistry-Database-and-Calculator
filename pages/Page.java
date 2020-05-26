@@ -22,7 +22,7 @@ public abstract class Page {
     protected Pane pane;
     protected Scene scene;
 
-    // Static variables all pages use. See goTo() on Lines 63-65.
+    // Static variables all pages use. See goTo().
     // setStage() and setPageMap() must be called before any subclass method (including constructors).
     private static Stage stage;
     private static HashMap<String, Page> pageMap;
@@ -34,15 +34,10 @@ public abstract class Page {
     protected final static double width = 1250;
     protected final static double height = 950;
     protected final static Insets boxPadding = new Insets(20,20,20,20);
+    protected final static double margin = 20;
     private final static double buttonWidth = 100;
     private final static double buttonHeight = 50;
-        
-    /* Every subclass of the Page class has to redirect to another page.
-     * Made protected since subclasses need to provide implementation,
-     * but classes outside the package do not need access to this. 
-     */
-    protected abstract void setRedirects();
-
+    
     /* All pages of the app have a pane and a scene, therefore all subclasses
      * will need to create a pane and scene. 
      */
@@ -63,6 +58,12 @@ public abstract class Page {
         Page.stage.setScene(pageMap.get(name).getScene());
     }
 
+    /* Every subclass of the Page class has to redirect to another page.
+     * Made protected since subclasses need to provide implementation,
+     * but classes outside the package do not need access to this. 
+     */
+    protected abstract void setRedirects();
+
     // Scene accessor for Main.java (hence public)
     public Scene getScene() {
         return this.scene;
@@ -79,15 +80,15 @@ public abstract class Page {
         button.setPrefHeight(buttonHeight);
         return button;
     }
-    
+
     /* Description:
      *  - Similar purpose to setButton()
      *  - Pages have back/return buttons to return to the previous page
      *  - All back buttons have the same properties, so a method is used
      *    to aid code readability and reuse
      */
-    protected Button setBackButton() {
-        Button back = new Button("<-");
+    protected Button setBackButton(String text) {
+        Button back = new Button(text);
         back.setPrefWidth(buttonWidth);
         back.setPrefHeight(buttonHeight);
         back.setLayoutX(10);
@@ -109,7 +110,7 @@ public abstract class Page {
     /* Returns the String stored in a text file under the name type. The 
      * parameter is called type because it refers to which type of 
      * table or calculator is being displayed. See TablePage.java 
-     * (Lines ___) or CalculatorPage.java (Lines ___) for an example. 
+     * or CalculatorPage.java for an example. 
      * 
      * This method is in Page.java because originally there 
      * was going to be more text to display in HomePage.java, but due to
@@ -117,9 +118,8 @@ public abstract class Page {
      * However, since TablePage.java and CalculatorPage.java are already
      * lengthy on their own, the method stayed here. 
      */
-    protected String getGuide(String type) throws IOException {
-        /* See TablePage.java (Lines ___) or CalculatorPage.java (Lines ___)
-         * for context. 
+    protected String getText(String type) throws IOException {
+        /* See TablePage.java or CalculatorPage.java for context. 
          * 
          * Removes any '\'' characters in type. When getGuide() is called, 
          * the title of the table/calculator is passed in. For grammatical
@@ -130,7 +130,7 @@ public abstract class Page {
         if(index != -1) {
             type = type.substring(0, index) + type.substring(index+1);
         }
-        String filePath = System.getProperty("user.dir") + "\\pages\\Instructions\\" + type + ".txt";
+        String filePath = System.getProperty("user.dir") + "\\Instructions\\" + type + ".txt";
         File file = new File(filePath);
         // Creates a BufferedReader to read from the text file.
         BufferedReader br = new BufferedReader(new FileReader(file));

@@ -1,3 +1,4 @@
+Volume 1 (L),Temperature 1 (K),Volume 2 (L),Temperature 2 (K)
 Formula: V1/T1 = V2/T2
 
 Explanation:
@@ -11,4 +12,5 @@ the volume and temperature of the ideal gas at a different point in time.
 
 Guidelines:
 Please input 3/4 values below. The calculator does account for significant figures,
-so input the correct amount of significant figures as well. No units.
+so input the correct amount of significant figures as well. No units. Press ENTER
+to use the calculator. 

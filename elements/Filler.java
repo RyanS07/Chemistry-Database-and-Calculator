@@ -1,4 +1,4 @@
-package pages.periodictable;
+package elements;
 
 public class Filler extends Element {
     /* Since the Filler class builds on the Element class, it calls the super()

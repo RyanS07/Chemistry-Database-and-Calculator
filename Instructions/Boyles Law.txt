@@ -1,3 +1,4 @@
+Pressure 1 (kPa),Volume 1 (L),Pressure 2 (kPa),Volume 2 (L)
 Formula: (P1)(V1) = (P2)(V2)
 
 Explanation:
@@ -11,4 +12,5 @@ the pressure and volume of the ideal gas at a different point in time.
 
 Guidelines:
 Please input 3/4 values below. The calculator does account for significant figures,
-so input the correct amount of significant figures as well. No units. 
+so input the correct amount of significant figures as well. No units. Press ENTER
+to use the calculator. 

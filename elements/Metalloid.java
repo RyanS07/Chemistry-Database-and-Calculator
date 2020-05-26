@@ -1,4 +1,4 @@
-package pages.periodictable;
+package elements;
 
 public class Metalloid extends Element {
     /* Since the Metalloid class builds on the Element class, it calls the super()

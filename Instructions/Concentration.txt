@@ -1,3 +1,4 @@
+Concentration 1 (mol/L),Volume 1 (L),Concentration 2 (mol/L),Volume 2 (L)
 Formula: (C1)(V1) = (C2)(V2)
 
 Explanation:
@@ -13,4 +14,5 @@ and lower the concentration.
 
 Guidelines:
 Please input 3/4 values below. The calculator does account for significant figures,
-so input the correct amount of significant figures as well. No units.
+so input the correct amount of significant figures as well. No units. Press ENTER
+to use the calculator. 

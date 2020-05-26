@@ -1,0 +1,1 @@
+#,Symbol,Name,Molar Mass (g/mol),Electron Configuration,Period,Group,Electronegativity,Van Del Waals Radius (/u212B),ionRadius (/u212B),1st Ionization Energy (kJ/mol),Electron Affinity (kJ/mol),State,Melting Point (K),Boiling Point (K),Density (g/ml),Group Name,Ion Charge

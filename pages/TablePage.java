@@ -1,10 +1,10 @@
 package pages;
 
-import pages.periodictable.Element;
-import pages.periodictable.Filler;
-import pages.periodictable.Metal;
-import pages.periodictable.Metalloid;
-import pages.periodictable.Nonmetal;
+import elements.Element;
+import elements.Filler;
+import elements.Metal;
+import elements.Metalloid;
+import elements.Nonmetal;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -34,26 +34,19 @@ import javafx.scene.text.Text;
 import javafx.util.Callback;
 
 public class TablePage extends Page {
-    private Button back;
+    // Two Page redirect buttons 
+    private Button home;
     private Button toCalculators;
 
-    // https://stackoverflow.com/questions/11145681/how-to-convert-a-string-with-unicode-encoding-to-a-string-of-letters
-    // https://en.wikipedia.org/wiki/Unicode_subscripts_and_superscripts
-    // Learning about Unicode:
-    // https://docs.oracle.com/javase/tutorial/i18n/text/unicode.html
-
+    // Stores the periodic table in a list of Element subclass instances.
     private ArrayList<Element> periodicTableValues;
+    // Contains all names of properties in the Element class. Used to 
+    // PropertyValueFactory instances for a TableView<Element>. 
     private String[] elementTableProperties;
-    private String[] elementTableHeaders = {
-        "#", "Symbol", "Name", "Molar Mass (g/mol)", 
-        "Electron Configuration", "Period", "Group", 
-        "Electronegativity", "Van Del Waals Radius (\u212B)", 
-        "ionRadius (\u212B)", "1st Ionization Energy (kJ/mol)", 
-        "Electron Affinity (kJ/mol)", "State", "Melting Point (K)", 
-        "Boiling Point (K)", "Density (g/ml)", "Group Name", 
-        "Ion Charge"
-    };
+    // Contains the headers of the TableView<Element> table.
+    private String[] elementTableHeaders;
 
+    // The MenuBar that displays the different table options.
     private MenuBar tableMenu;
     private Text tableTitle;
     private Text instructions;
@@ -64,25 +57,45 @@ public class TablePage extends Page {
         "Activity Series", "Vapour Pressure Table"
     };
 
+    /* The constructor is the only public method of any Page subclass. This lowers
+     * the number of method calls in the client program, improving readability and
+     * centralizing all of the code pertaining to a specific Page subclass to that 
+     * file. 
+     */
     public TablePage() {
+        // All Page subclasses build on Page, so they call super() and add some
+        // additional behavior unique to each subclass. 
         super();
 
-        this.back = setBackButton();
-        this.pane.getChildren().add(this.back);
+        // Creating the back button to return to the previous page.
+        // Note, this only initializes the button. It does not tell the
+        // button where to redirect to when clicked (see setRedirects()). 
+        this.home = setBackButton("Home");
+        this.pane.getChildren().add(this.home);
 
+        // Creating the button that redirects to the calculator page.
+        // Note, this only initializes the button. It does not tell the
+        // button where to redirect to when clicked (see setRedirects()). 
         this.toCalculators = setButton("Calculators");
         this.toCalculators.setLayoutX(Page.width - this.toCalculators.getPrefWidth() - 10);
         this.toCalculators.setLayoutY(10);
         this.pane.getChildren().add(this.toCalculators);
 
+        // Initializes the tableMenu MenuBar. 
         setTableMenu();
-        setTable(tableOptions[0]);
+        // Creates/fills the tableBox VBox with whichever table specified by the parameter.
+        // this.tableOptions[0] ("Periodic Table") is the default value. 
+        setTable(this.tableOptions[0]);
         
         setRedirects();
     }
 
+    /* This method establishes how each page redirects to each other. 
+     * The Table Page is a "middle point" page, so it redirects back
+     * to the Home Page, and up towards the Calculator Page. 
+     */
     protected void setRedirects() {
-        this.back.setOnAction(event -> {
+        this.home.setOnAction(event -> {
             goTo("Home");
         });
         this.toCalculators.setOnAction(event -> {
@@ -90,55 +103,92 @@ public class TablePage extends Page {
         });
     }
 
+    /* Creates the MenuBar that allows the user to flip between the different
+     * types of tables in tableOptions. 
+     */
     private void setTableMenu() {
-        Menu tableMenuOptions = new Menu("Options");
+        /* When a MenuItem is selected, an ActionEvent is triggered. As such,
+         * an EventHandler for said ActionEvent is required. 
+         */
         EventHandler<ActionEvent> event = new EventHandler<ActionEvent> () {
             public void handle(ActionEvent e) { 
+                // The children of most JavaFX classes are stored as Node 
+                // instances. As such, a downcast is required to cast from
+                // Node to MenuItem. 
                 String selection = ((MenuItem) e.getSource()).getText();
+                // See below for an explanation
                 setTable(selection);
             }
         };
+
+        /* When creating a MenuBar, there are three components: the MenuBar (1) 
+         * with some number of Menu (2) instances each having some number of 
+         * MenuItem (3) instances. 
+         * 
+         * The Menu and MenuItem instances of the calcMenu do not need to be 
+         * accessed by any other method, so they are kept locally here.
+         * calcMenu (MenuBar) needs to be accessed to position the calcBox 
+         * relative to the MenuBar. 
+         */
+        Menu tableMenuOptions = new Menu("Options");
         for(int i = 0; i < tableOptions.length; i++) {
             MenuItem mi = new MenuItem(tableOptions[i]);
             mi.setOnAction(event);
+            // Adding each MenuItem to the Menu
             tableMenuOptions.getItems().add(mi);
         }
+        // Initializing and positioning calcMenuBar
         this.tableMenu = new MenuBar();
-        this.tableMenu.setLayoutX(20);
+        this.tableMenu.setLayoutX(Page.margin);
         this.tableMenu.setLayoutY(100);
-
         this.tableMenu.getMenus().add(tableMenuOptions);
+
         this.pane.getChildren().add(tableMenu);
     }
 
+    // Creates the table specified by type. 
     private void setTable(String type) {
+        /* Each time setTable is called, the method creates a new VBox 
+         * instance to display on this.pane. As such, the old VBox
+         * needs to be removed from the pane. 
+         */
         this.pane.getChildren().remove(this.tableBox);
 
+        // Assigns type to this.calcType so that other methods know
+        // Which calculator is current displayed. 
         this.tableType = type;
         this.tableTitle = new Text(this.tableType);
 
+        // Creating the new tableBox (mentioned above).
         this.tableBox = new VBox(20);
-        this.tableBox.setPadding(new Insets(20, 20, 20, 20));
+        this.tableBox.setPadding(Page.boxPadding);
+        this.tableBox.setLayoutX(Page.margin);
         this.tableBox.setLayoutY(this.tableMenu.getLayoutY() + 50);
-        this.tableBox.setLayoutX(20);
         this.tableBox.getChildren().add(this.tableTitle);
 
+        /* For 3/4 tables (all but the Periodic Table), they share the 
+         * exact same structure (TableView<String[]> with values from
+         * a csv). As such, all the common variables of the 3 tables
+         * are declared, then assigned proper values based on which 
+         * option is desired. 
+         */
         ObservableList<String[]> csv = FXCollections.observableArrayList();
         TableView<String[]> table = new TableView<String[]>();
         String[] headers;
         int columnWidth = 0;
         int tableHeight = 0;
         String guide = "";
-        instructions = new Text();
+        this.instructions = new Text();
         
-        if(type.equals(tableOptions[0])) {
+        // As mentioned above, the Periodic Table is unique from the 
+        // other 3 tables.
+        if(type.equals(this.tableOptions[0])) {
             createPeriodicTable();
-            this.pane.getChildren().addAll(this.tableBox);
             return;
         } else {
             try {
-                csv = readCSV(type + ".csv");
-                guide = getGuide(type);
+                csv = readCSV(type);
+                guide = getText(type);
             } catch(IOException e) {
                 e.printStackTrace();
             }
@@ -183,23 +233,23 @@ public class TablePage extends Page {
     }
 
     private void createPeriodicTable() {
-        periodicTableValues = new ArrayList<Element>();
+        this.periodicTableValues = new ArrayList<Element>();
         this.instructions = new Text();
         try {
-            periodicTableValues = getPeriodicTableValues(tableOptions[0] + ".csv");
-            this.instructions.setText(getGuide("Periodic Table"));
+            this.periodicTableValues = getPeriodicTableValues(tableOptions[0] + ".csv");
+            this.instructions.setText(getText("Periodic Table"));
         } catch(IOException e) {
             System.out.println( tableOptions[0]+ ".csv could not be parsed.");
         }
 
         Pane periodicTable = new Pane();
-        for(int i = 0; i < periodicTableValues.size(); i++) {
-            Element currentElement = periodicTableValues.get(i);
+        for(int i = 0; i < this.periodicTableValues.size(); i++) {
+            Element currentElement = this.periodicTableValues.get(i);
             Button icon = currentElement.getIcon();
             periodicTable.getChildren().add(icon);
         }
 
-        HBox elementRedirectBox = new HBox();
+        HBox elementRedirectBox = new HBox(10);
         Button seeDetails = new Button("See Details");
         seeDetails.setOnAction(event -> {
             createElementDisplay();            
@@ -213,6 +263,8 @@ public class TablePage extends Page {
         });
 
         this.tableBox.getChildren().addAll(this.instructions, periodicTable, elementRedirectBox, clearSelection);
+
+        this.pane.getChildren().addAll(this.tableBox);
     }
 
     private void createElementDisplay() {
@@ -230,6 +282,11 @@ public class TablePage extends Page {
             return;
         } else {
             this.tableBox.getChildren().clear();
+        }
+        try { 
+            this.elementTableHeaders = getText("Element Table Headers").split(",");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         for(int i = 0; i < this.elementTableProperties.length; i++) {
             String currentHeader = this.elementTableHeaders[i];
@@ -261,7 +318,7 @@ public class TablePage extends Page {
     }
 
     private ArrayList<Element> getPeriodicTableValues(String fileName) throws IOException {
-        String filePath = System.getProperty("user.dir") + "\\pages\\CSV\\" + fileName;
+        String filePath = System.getProperty("user.dir") + "\\CSV\\" + fileName;
         File file = new File(filePath);
         BufferedReader br = new BufferedReader(new FileReader(file));
         ArrayList<Element> periodicTableValues = new ArrayList<Element>();
@@ -313,7 +370,7 @@ public class TablePage extends Page {
     }
 
     private ObservableList<String[]> readCSV(String fileName) throws IOException {
-        String filePath = System.getProperty("user.dir") + "\\pages\\CSV\\" + fileName;
+        String filePath = System.getProperty("user.dir") + "\\CSV\\" + fileName + ".csv";
         File file = new File(filePath);
         BufferedReader br = new BufferedReader(new FileReader(file));
         ObservableList<String[]> fileValues = FXCollections.observableArrayList();
@@ -335,6 +392,10 @@ public class TablePage extends Page {
     // Strings can only turn unicode into chars in initialization
     // If stored in a text file, they need to be parsed explicitly
     // code cannot be ""
+    // https://stackoverflow.com/questions/11145681/how-to-convert-a-string-with-unicode-encoding-to-a-string-of-letters
+    // https://en.wikipedia.org/wiki/Unicode_subscripts_and_superscripts
+    // Learning about Unicode:
+    // https://docs.oracle.com/javase/tutorial/i18n/text/unicode.html
     private String parse(String code) {
         String[] parts = code.split("/");
         String decoded = "";

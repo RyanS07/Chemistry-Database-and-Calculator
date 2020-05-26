@@ -1,4 +1,4 @@
-package pages.periodictable;
+package elements;
 
 import java.lang.reflect.Field;
 

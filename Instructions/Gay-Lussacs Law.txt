@@ -1,3 +1,4 @@
+Pressure 1 (kPa),Temperature 1 (K),Pressure 2 (kPa),Temperature 2 (K)
 Formula: P1/T1 = P2/T2
 
 Explanation:
@@ -11,4 +12,5 @@ refer to the pressure and temperature of the ideal gas at a different point in t
 
 Guidelines:
 Please input 3/4 values below. The calculator does account for significant figures,
-so input the correct amount of significant figures as well. No units.
+so input the correct amount of significant figures as well. No units. Press ENTER
+to use the calculator. 

@@ -9,8 +9,8 @@ different point in time. For example, adding more water would increase the volum
 and lower the concentration. 
  - Ex: 
     (10.0mol/L)(2.00L) = (C2)(1.00L)
-                            C2 = (10.0mol/L)(2.00L) / 1.00L
-                            C2 = 20.0mol/L
+                            C2 = (10.0mol/L)(2.00L) / 4.00L
+                            C2 = 5.00mol/L
 
 Guidelines:
 Please input 3/4 values below. The calculator does account for significant figures,

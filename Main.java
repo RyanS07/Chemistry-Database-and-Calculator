@@ -1,3 +1,5 @@
+// Made by Ryan Seto and Matton Xia
+
 import javafx.application.Application;
 import javafx.stage.Stage;
 

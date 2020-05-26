@@ -116,9 +116,9 @@ public class CalculatorPage extends Page {
         this.pane.getChildren().add(this.calcMenuBar);
     }
 
-    /* CalculatorPage.java overrides getText() because there are 
-     * some additional steps to parse the instruction text files 
-     * for the calculator page. 
+    /* CalculatorPage.java partially overrides getText() because 
+     * there are some additional steps to parse the instruction 
+     * text files for the calculator page. 
      * 
      * The instruction text files also store the headers for their
      * respective input fields. For CalculatorPage.java, they need

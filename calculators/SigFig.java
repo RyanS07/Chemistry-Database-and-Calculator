@@ -54,7 +54,7 @@ public class SigFig {
 		 * Note: the index of the first non-zero digit is also the number of 
 		 * leading zeros. 
 		 */
-		while(counter < val.length() && val.charAt(counter) == 0) {
+		while(counter < val.length() && val.charAt(counter) == '0') {
 			counter++;
 		}
 

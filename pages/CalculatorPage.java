@@ -268,15 +268,13 @@ public class CalculatorPage extends Page {
             VBox vb = (VBox) this.inputHBox.getChildren().get(i);
             TextField tf = (TextField) vb.getChildren().get(1);
             String fieldValue = tf.getCharacters().toString().trim();
-            boolean isValid = true;
             for(char digit : fieldValue.toCharArray()) {
                 // If fieldValues is not a double or is not in sci not'n
                 if(!(digit >= '0' && digit <= '9' || digit == '.' || digit == 'E')) {
-                    isValid = false;
-                    break;
+                    return false;
                 }
             }
-            if(!isValid || fieldValue.equals("")) {
+            if(fieldValue.equals("")) {
                 numValid++;
             } 
         }
@@ -291,14 +289,15 @@ public class CalculatorPage extends Page {
      */
     private void displayResponse() {
         if(isValidInput()) {
-            String answer = calculate();
             // Loops through all the TextFields to find which
             // field is empty.
             for(int i = 0; i < this.numInputs; i++) {
                 VBox vb = (VBox) this.inputHBox.getChildren().get(i);
                 Text header = (Text) vb.getChildren().get(0);
                 TextField tf = (TextField) vb.getChildren().get(1);
+                // Checks if the trimmed value from tf is equal to ""
                 if(tf.getCharacters().toString().trim().equals("")) {
+                    String answer = calculate();
                     // Once the empty field has been found, the unit of
                     // the answer is stored in brackets in the header.
                     String headerText = header.getText();

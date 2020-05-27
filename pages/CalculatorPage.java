@@ -268,11 +268,31 @@ public class CalculatorPage extends Page {
             VBox vb = (VBox) this.inputHBox.getChildren().get(i);
             TextField tf = (TextField) vb.getChildren().get(1);
             String fieldValue = tf.getCharacters().toString().trim();
+            int eCounter = 0;
+            int dotCounter = 0;
             for(char digit : fieldValue.toCharArray()) {
-                // If fieldValues is not a double or is not in sci not'n
-                if(!(digit >= '0' && digit <= '9' || digit == '.' || digit == 'E')) {
-                    return false;
+                /* If the user accidentally puts two or more '.' or 'E'. Integer.parseInt() 
+                 * will throw a NumberFormatException. To avoid this, code checks to make 
+                 * sure only one '.' and/or 'E' are present.
+                 */
+                if(digit == 'E') {
+                    eCounter++;
+                } 
+                if(digit == '.') {
+                    dotCounter++;
                 }
+                /* This boolean translates to:
+                 * if the digit is not a valid number char (0-9, or 'E' or '.') or either
+                 * 2 or more '.' or 'E' are present, return false. 
+                 * 
+                 * The original boolean was:
+                 * digit < '0' || digit > '9' || eCounter > 1 || dotCounter > 1
+                 * The problem was that '.' < '0' == true, then making the entire
+                 * boolean true and executing incorrectly.  This is the work around.
+                 */
+                if(!(digit >= '0' && digit <= '9' || digit == 'E' || digit == '.')  || eCounter > 1 || dotCounter > 1) {
+                    return false;
+                } 
             }
             if(fieldValue.equals("")) {
                 numValid++;

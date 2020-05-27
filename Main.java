@@ -10,8 +10,6 @@ import pages.CalculatorPage;
 
 import java.util.HashMap;
 
-import calculators.SigFig;
-
 public class Main extends Application{
     // HashMap containing all Page instances of the app and how to get to them
     public HashMap<String, Page> pageMap = new HashMap<String, Page>();

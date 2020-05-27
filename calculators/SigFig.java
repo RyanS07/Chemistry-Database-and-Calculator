@@ -1,9 +1,5 @@
 package calculators;
 
-/* TODO:
- *  - Write comment to explain determine() return 0
- */
-
 /* The SigFig class is a collection of static methods used to perform arithmatic with
  * the rules of significant digits (referred to as sig fig or sf)
  */

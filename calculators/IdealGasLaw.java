@@ -155,8 +155,7 @@ public class IdealGasLaw {
      *  - Returns a String to maintain trailing zeros
      * 
      * Precondition:
-     *  - Textfields must call the trim() method on all their String values
-     *  - Onnly 1/4 String can be an empty String ("")
+     *  - Only 1/4 String can be an empty String ("")
      */
     public static String solve(String[] inputs) {
         // Values are trimmed to properly determine the number of sig figs in

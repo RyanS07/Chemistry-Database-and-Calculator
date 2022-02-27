@@ -1,2 +1,2 @@
-# AP Comp Sci Final Project
- Chemistry Calculator/Database
+# Chemistry Database and Calculator
+ Currently has the periodic table, 
